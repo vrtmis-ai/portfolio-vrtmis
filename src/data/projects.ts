@@ -15,6 +15,9 @@
 export interface Project {
   /** URL-safe slug — used in /work/<slug> and as folder name */
   slug: string
+  /** True for the 4 hero projects shown in the home-page horizontal scroll.
+   *  All projects (featured or not) appear on the /work index page. */
+  featured?: boolean
   /** Card number — "01", "02", ... */
   id: string
   /** Display title — may contain \n for line breaks on the card */
@@ -40,6 +43,7 @@ export interface Project {
 export const PROJECTS: Project[] = [
   {
     slug: 'alireza-ghorbani',
+    featured: true,
     id: '01',
     title: 'Alireza\nGhorbani',
     caseStudyTitle: 'Alireza Ghorbani — Live Concert',
@@ -54,6 +58,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: 'oliver-twist',
+    featured: true,
     id: '02',
     title: 'Oliver\nTwist',
     caseStudyTitle: 'Oliver Twist — Theatre',
@@ -82,6 +87,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: 'tehran-univ-of-art',
+    featured: true,
     id: '04',
     title: 'Tehran\nUniv. of Art',
     caseStudyTitle: 'Tehran University of Art — Student Day',
@@ -96,6 +102,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: 'music-video-vfx',
+    featured: true,
     id: '05',
     title: 'Music\nVideo VFX',
     caseStudyTitle: 'Music Video VFX — Multi-artist',
@@ -108,6 +115,90 @@ export const PROJECTS: Project[] = [
     accent: '#a0ff00',
     tags: ['VFX', 'AI', 'Greenscreen', 'CGI'],
   },
+  {
+    slug: 'esteghlal',
+    id: '06',
+    title: 'Esteghlal',
+    caseStudyTitle: 'Esteghlal — Stadium Mapping',
+    client: 'Esteghlal F.C.',
+    category: 'Architectural Mapping',
+    year: '2024',
+    description: 'Stadium-scale architectural video mapping for a major sport event.',
+    longDescription:
+      'Large-format architectural video mapping for an Esteghlal football club event. Concept, animation, multi-projector synchronisation, on-site execution under tight crew constraints.',
+    accent: '#2563eb',
+    tags: ['Stadium', 'Resolume', 'Live', 'Multi-projector'],
+  },
+  {
+    slug: 'tigard',
+    id: '07',
+    title: 'Tigard\nEvent',
+    caseStudyTitle: 'Tigard — Event Mapping',
+    client: 'Tigard',
+    category: 'Video Mapping',
+    year: '2024',
+    description: 'Architectural mapping for a live brand event.',
+    longDescription:
+      'Single-night video mapping installation for a Tigard live event. Brand-driven motion choreographed to the venue\'s architecture, cued live through Resolume.',
+    accent: '#f59e0b',
+    tags: ['Live Event', 'Mapping', 'Brand'],
+  },
+  {
+    slug: 'u-bank',
+    id: '08',
+    title: 'U Bank',
+    caseStudyTitle: 'U Bank — Brand Campaign VFX',
+    client: 'U Bank',
+    category: 'VFX & Compositing',
+    year: '2024',
+    description: 'VFX compositing and motion design for U Bank brand campaign.',
+    longDescription:
+      'Full VFX and compositing pass for U Bank\'s brand campaign series. Greenscreen integration, environment extension, and motion graphics across multiple spots.',
+    accent: '#0ea5e9',
+    tags: ['Campaign', 'Compositing', 'Motion'],
+  },
+  {
+    slug: 'cgi-carkook',
+    id: '09',
+    title: 'CGI\nCarkook',
+    caseStudyTitle: 'Carkook — CGI Integration',
+    client: 'Carkook',
+    category: 'CGI · VFX',
+    year: '2024',
+    description: 'CGI product visualization with live-action integration.',
+    longDescription:
+      'Full CGI product visualization for Carkook with photoreal integration into live-action plates. Modeling, look-dev, lighting, compositing in a single hand.',
+    accent: '#e11d48',
+    tags: ['CGI', 'Product', 'Photoreal'],
+  },
+  {
+    slug: 'serkan-filter',
+    id: '10',
+    title: 'Serkan\nFilter',
+    caseStudyTitle: 'Serkan Filter — Filimo Teaser',
+    client: 'Serkan · Filimo',
+    category: 'Ad Roll · Compositing',
+    year: '2024',
+    description: 'Ad roll and teaser VFX for the Serkan Filter Filimo series.',
+    longDescription:
+      'Ad-roll and teaser package for the Serkan Filter Filimo series. Brand-aligned color treatment, VFX compositing, and short-form delivery cuts.',
+    accent: '#84cc16',
+    tags: ['Ad Roll', 'Filimo', 'Teaser'],
+  },
+  {
+    slug: 'fashion-documentary',
+    id: '11',
+    title: 'Fashion\nDocumentary',
+    caseStudyTitle: 'Fashion Documentary — Intro',
+    client: 'Documentary Production',
+    category: 'Editing · Title Design',
+    year: '2023',
+    description: 'Title sequence and intro edit for a fashion documentary.',
+    longDescription:
+      'Intro sequence and title design for a long-form fashion documentary. Color, rhythm, and motion-typography choreographed to the music bed.',
+    accent: '#f97316',
+    tags: ['Editing', 'Titles', 'Documentary'],
+  },
 ]
 
 /** Lookup helper used by /work/<slug> routes */
@@ -115,3 +206,8 @@ export function getProject(slug: string | undefined): Project | undefined {
   if (!slug) return undefined
   return PROJECTS.find(p => p.slug === slug)
 }
+
+/** Featured subset — shown in the home-page horizontal Work section.
+ *  All others remain visible on the /work index page. */
+export const FEATURED_PROJECTS = PROJECTS.filter(p => p.featured)
+

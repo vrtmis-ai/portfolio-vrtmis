@@ -3,8 +3,12 @@ import { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SplitText } from './SplitText'
 import { HorizonMedia } from './HorizonMedia'
-import { PROJECTS, type Project } from '../data/projects'
+import { FEATURED_PROJECTS, PROJECTS, type Project } from '../data/projects'
 import styles from './Work.module.css'
+
+/** Home Work section shows ONLY the featured subset (4 hero projects).
+ *  The full list lives on the /work index page. */
+const HOME_PROJECTS = FEATURED_PROJECTS
 
 /**
  * Configure the closing-frame media here.
@@ -37,16 +41,13 @@ export function Work() {
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 80, damping: 30 })
 
   /**
-   * Translate the track horizontally based on vertical scroll.
-   *
-   * Calibration: at scrollProgress = 1 the HORIZON tile must land CLEARLY
-   * in the right side of the viewport — not at the centre, not crossing it.
-   *   shift  -55% → horizon left edge sits around 70% across the viewport
-   *   final card body fills the right third while project cards are visible
-   *   on the left two-thirds.
-   * Long hold (0.80 → 1) so the user gets to dwell on the closing frame.
+   * Track now holds 4 featured cards + 1 endCap-link + 1 horizon = 6 slots.
+   * Total track width ≈ 4×450 + 400 + 400 + gaps ≈ 2700px on desktop.
+   * Viewport ~1300px → travel needed ≈ 1400px ≈ 52% of track.
+   * Set max shift to -50% so horizon settles in the right third without
+   * the user having to scroll a 320vh tunnel.
    */
-  const x = useTransform(smoothProgress, [0, 0.80, 1], ['0%', '-55%', '-55%'])
+  const x = useTransform(smoothProgress, [0, 0.85, 1], ['0%', '-50%', '-50%'])
 
   return (
     <section className={styles.work} id="work">
@@ -60,7 +61,9 @@ export function Work() {
           transition={{ duration: 0.8 }}
         >
           <span className="t-label">Selected Work</span>
-          <span className={`t-label ${styles.count}`}>05 / Projects</span>
+          <span className={`t-label ${styles.count}`}>
+            0{HOME_PROJECTS.length} of {PROJECTS.length}
+          </span>
         </motion.div>
         <h2 className={`t-display ${styles.sectionTitle}`}>
           <SplitText trigger="inview" stagger={0.05} duration={1.0}>
@@ -73,24 +76,19 @@ export function Work() {
       <div ref={containerRef} className={styles.scrollContainer}>
         <div className={styles.sticky}>
           <motion.div ref={trackRef} className={styles.track} style={{ x }}>
-            {PROJECTS.map((project) => (
+            {HOME_PROJECTS.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
-            {/* Trailing footer — "more upon request" with CTA */}
-            <div className={styles.endCap}>
-              <span className="t-mono">/ END</span>
+            {/* Trailing footer — link to the full /work index */}
+            <Link to="/work" className={styles.endCap}>
+              <span className="t-mono">/ {PROJECTS.length - HOME_PROJECTS.length}+ more</span>
               <p className={`t-display ${styles.endText}`}>
-                More
+                See all
                 <br />
-                <span className={styles.endUnderline}>upon request.</span>
+                <span className={styles.endUnderline}>work.</span>
               </p>
-              <a
-                href="mailto:mahbodtavassoli@outlook.com"
-                className="t-mono"
-              >
-                Get in touch →
-              </a>
-            </div>
+              <span className="t-mono">View archive →</span>
+            </Link>
 
             {/*
               Horizon — the final frame of the horizontal scroll.

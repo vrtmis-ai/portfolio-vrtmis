@@ -57,7 +57,10 @@ export function Nav() {
       {/* Desktop links + theme toggle */}
       <div className={styles.rightCluster}>
         <ul className={`${styles.links} ${open ? styles.linksOpen : ''}`}>
-          <li><SectionLink hash="work" label="Work" /></li>
+          {/* Work is now its own route — full archive at /work */}
+          <li>
+            <Link to="/work" onClick={() => setOpen(false)}>Work</Link>
+          </li>
           <li><SectionLink hash="about" label="About" /></li>
           <li><SectionLink hash="collaborations" label="Clients" hover /></li>
           <li><SectionLink hash="contact" label="Contact" /></li>

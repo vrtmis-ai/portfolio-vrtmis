@@ -6,10 +6,10 @@
 .work {
   position: relative;
   border-top: 1px solid var(--border-faint);
-  /* Skip painting + style/layout of off-screen content. 320vh tall section,
-     huge savings when not in view. Intrinsic size keeps scroll position stable. */
+  /* Skip painting + style/layout of off-screen content. Updated to match
+     the shorter 200vh container after going to 4 featured cards. */
   content-visibility: auto;
-  contain-intrinsic-size: 320vh;
+  contain-intrinsic-size: 200vh;
 }
 
 /* Header — sits at top before the horizontal scroll starts */
@@ -41,7 +41,9 @@
   /* x-travel is now only 55% of the track (was 64%), and the FINAL 20% of
      scroll is a hold for dwell on the horizon. Total height reduced to
      match — section feels lighter, exits faster after the horizon arrives. */
-  height: 260vh;
+  /* Shorter than before: 4 featured cards travel a smaller distance,
+     so the section exits sooner and the user reaches the /work CTA faster. */
+  height: 200vh;
 }
 
 .sticky {
@@ -197,7 +199,7 @@
   font-size: 0.7rem;
 }
 
-/* ── End cap — final card with "more upon request" ── */
+/* ── End-cap — now a Link to /work index page ── */
 .endCap {
   flex: 0 0 auto;
   width: clamp(280px, 26vw, 400px);
@@ -208,6 +210,18 @@
   justify-content: space-between;
   border-left: 1px solid var(--border-soft);
   border-right: 1px solid var(--border-soft);
+  text-decoration: none;
+  color: var(--paper);
+  cursor: none;
+  transition: background 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.endCap:hover {
+  background: var(--char);
+}
+
+.endCap:hover .endText {
+  color: var(--reactor);
 }
 
 .endText {
@@ -217,25 +231,11 @@
   letter-spacing: -0.03em;
   margin-top: auto;
   margin-bottom: 32px;
+  transition: color 0.3s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .endUnderline {
   color: var(--reactor);
-}
-
-.endCap a {
-  align-self: flex-start;
-  padding: 12px 24px;
-  border: 1px solid var(--concrete);
-  transition: background 0.3s var(--ease-out-expo),
-              color 0.3s var(--ease-out-expo),
-              border-color 0.3s var(--ease-out-expo);
-}
-
-.endCap a:hover {
-  background: var(--reactor);
-  color: var(--pitch);
-  border-color: var(--reactor);
 }
 
 /* ── HORIZON — final media card. Same footprint as endCap so a 3:4
