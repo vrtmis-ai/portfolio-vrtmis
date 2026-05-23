@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Hero } from './components/Hero'
 import { Nav } from './components/Nav'
 import { IntroLoader } from './components/IntroLoader'
@@ -35,10 +37,35 @@ import { useMouseInteraction } from './hooks/useMouseInteraction'
  *  13.  Footer          — wrap.
  */
 function App() {
-  const { scrollProgress } = useSmoothScroll()
+  const { scrollProgress, lenis } = useSmoothScroll()
   // Single hook drives both the custom cursor AND the parallax mouse position.
   // One global mousemove listener (passive) instead of two.
   const { cursorRef, state, mouse } = useMouseInteraction()
+
+  /**
+   * Hash-aware scrolling.
+   *
+   * When the user lands on the home route with a hash (e.g. /#work, after
+   * clicking a nav link from a case-study page), browsers can't auto-scroll
+   * because Lenis owns the scroll position. We manually scroll to the
+   * matching element once the section has mounted.
+   */
+  const location = useLocation()
+  useEffect(() => {
+    if (!location.hash) return
+    const id = location.hash.slice(1)
+    // Defer to next tick so the target section is in the DOM
+    const timer = window.setTimeout(() => {
+      const el = document.getElementById(id)
+      if (!el) return
+      if (lenis.current) {
+        lenis.current.scrollTo(el, { offset: -80 })  // clear the fixed nav
+      } else {
+        el.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 80)
+    return () => window.clearTimeout(timer)
+  }, [location.hash, lenis])
 
   /**
    * Four cinematic scenes — a mini-arc, NOT a re-statement of Hero/About.
