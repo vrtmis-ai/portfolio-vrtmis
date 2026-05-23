@@ -8,6 +8,8 @@
   padding-left: clamp(24px, 5vw, 80px);
   padding-right: clamp(24px, 5vw, 80px);
   border-top: 1px solid oklch(94% 0.008 30 / 0.07);
+  content-visibility: auto;
+  contain-intrinsic-size: 1400px;
 }
 
 /* ── Header ── */

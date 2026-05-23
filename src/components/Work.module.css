@@ -6,6 +6,10 @@
 .work {
   position: relative;
   border-top: 1px solid oklch(94% 0.008 30 / 0.07);
+  /* Skip painting + style/layout of off-screen content. 320vh tall section,
+     huge savings when not in view. Intrinsic size keeps scroll position stable. */
+  content-visibility: auto;
+  contain-intrinsic-size: 320vh;
 }
 
 /* Header — sits at top before the horizontal scroll starts */

@@ -15,8 +15,7 @@ import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { BackToTop } from './components/BackToTop'
 import { useSmoothScroll } from './hooks/useSmoothScroll'
-import { useMousePosition } from './hooks/useMousePosition'
-import { useCursor } from './hooks/useCursor'
+import { useMouseInteraction } from './hooks/useMouseInteraction'
 
 /**
  * Page composition — Studio Floor narrative order.
@@ -37,8 +36,9 @@ import { useCursor } from './hooks/useCursor'
  */
 function App() {
   const { scrollProgress } = useSmoothScroll()
-  const mouse = useMousePosition()
-  const { cursorRef, state } = useCursor()
+  // Single hook drives both the custom cursor AND the parallax mouse position.
+  // One global mousemove listener (passive) instead of two.
+  const { cursorRef, state, mouse } = useMouseInteraction()
 
   /**
    * Four cinematic scenes — a mini-arc, NOT a re-statement of Hero/About.

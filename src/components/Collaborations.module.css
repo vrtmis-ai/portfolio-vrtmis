@@ -6,6 +6,9 @@
   padding-top: 120px;
   padding-bottom: 120px;
   border-top: 1px solid oklch(94% 0.008 30 / 0.07);
+  /* Skip painting the 15-tile grid when off-screen */
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
 }
 
 .header {

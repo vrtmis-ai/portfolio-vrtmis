@@ -57,7 +57,7 @@ export function CTAButton({
   const inner = (
     <>
       <span className={styles.label}>{children}</span>
-      {arrowGlyph && <span className={styles.arrow}>{arrowGlyph}</span>}
+      {arrowGlyph ? <span className={styles.arrow}>{arrowGlyph}</span> : null}
     </>
   )
 

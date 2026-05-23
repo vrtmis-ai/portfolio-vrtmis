@@ -87,7 +87,7 @@ function Counter({ metric, index, active }: { metric: Metric; index: number; act
     >
       <div className={styles.value}>
         <span className={`t-display ${styles.number}`}>{n}</span>
-        {metric.suffix && <span className={`t-display ${styles.suffix}`}>{metric.suffix}</span>}
+        {metric.suffix ? <span className={`t-display ${styles.suffix}`}>{metric.suffix}</span> : null}
       </div>
       <div className={styles.meta}>
         <span className={`t-label ${styles.label}`}>{metric.label}</span>
