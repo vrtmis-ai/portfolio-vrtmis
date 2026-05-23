@@ -1,7 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { SplitText } from './SplitText'
-import { InlinePill } from './InlinePill'
 import styles from './Contact.module.css'
 
 /**
@@ -29,9 +28,7 @@ export function Contact() {
           <br />
           <SplitText stagger={0.05} duration={1.0} delay={0.25} trigger="inview">something</SplitText>
           <br />
-          <SplitText stagger={0.05} duration={1.0} delay={0.5} trigger="inview">real</SplitText>
-          {' '}<InlinePill>actually</InlinePill>
-          <span>.</span>
+          <SplitText stagger={0.05} duration={1.0} delay={0.5} trigger="inview">real.</SplitText>
         </h2>
 
         <div className={styles.details}>
