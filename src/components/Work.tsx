@@ -1,7 +1,9 @@
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { SplitText } from './SplitText'
 import { HorizonMedia } from './HorizonMedia'
+import { PROJECTS, type Project } from '../data/projects'
 import styles from './Work.module.css'
 
 /**
@@ -15,66 +17,6 @@ import styles from './Work.module.css'
  */
 const HORIZON_SRC = '/work/horizon.mp4'
 const HORIZON_LOOP = false
-
-interface Project {
-  id: string
-  title: string
-  client: string
-  category: string
-  year: string
-  description: string
-  /** Hue used for the project's color block placeholder */
-  accent: string
-}
-
-/** Real projects from CV — color blocks instead of placeholder photos. */
-const PROJECTS: Project[] = [
-  {
-    id: '01',
-    title: 'Alireza\nGhorbani',
-    client: 'Live Concert',
-    category: 'Architectural Mapping',
-    year: '2024',
-    description: 'Large-scale architectural video mapping for major live concert.',
-    accent: '#ff3d00',
-  },
-  {
-    id: '02',
-    title: 'Oliver\nTwist',
-    client: 'Mr. Parsaei · Theatre',
-    category: 'AI Teaser + Stage Mapping',
-    year: '2024',
-    description: 'AI-generated teaser combined with live stage mapping for theatre production.',
-    accent: '#3d5aff',
-  },
-  {
-    id: '03',
-    title: 'My\nBaby',
-    client: 'Product Launch',
-    category: 'Architectural Mapping',
-    year: '2024',
-    description: 'Architectural video mapping for live product launch event.',
-    accent: '#ffffff',
-  },
-  {
-    id: '04',
-    title: 'Tehran\nUniv. of Art',
-    client: 'Student Day',
-    category: 'Video Mapping · Workshop',
-    year: '2023',
-    description: '1,000+ audience · 48hr delivery · Free workshop on real-time visual systems.',
-    accent: '#ffb300',
-  },
-  {
-    id: '05',
-    title: 'Music\nVideo VFX',
-    client: 'Various',
-    category: 'Greenscreen · CGI · AI',
-    year: '2023',
-    description: 'Greenscreen compositing, CGI integration, and AI visual pipeline.',
-    accent: '#a0ff00',
-  },
-]
 
 /**
  * Work — horizontal-scroll editorial showcase.
@@ -180,67 +122,123 @@ export function Work() {
   )
 }
 
+/**
+ * ProjectCard — clickable link to /work/<slug>.
+ *
+ *   - 3D tilt on cursor (±12°, perspective 800px) via CSS vars
+ *   - Hover-preview video: lazy-loaded video lives in the visual area.
+ *     On mouse-enter, the video plays muted, looped. On mouse-leave, it
+ *     pauses and the poster (or accent colour) shows again.
+ *   - Whole card is a <Link> — clicking anywhere navigates to the case study.
+ */
 function ProjectCard({ project }: { project: Project }) {
   const cardRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [videoReady, setVideoReady] = useState(false)
 
   /**
-   * Mouse-react 3D tilt — sets --tilt-x / --tilt-y CSS vars based on the cursor
-   * position over the card. CSS reads these vars to drive a perspective-rotated
-   * transform on .cardInner. Spring-eased via cubic-bezier(0.32, 0.72, 0, 1).
+   * Lazy-prime the video when the card scrolls within ~400px of the viewport.
+   * preload="none" until then, so off-screen cards add zero bandwidth on load.
    */
-  function handleMove(e: React.MouseEvent<HTMLDivElement>) {
+  useEffect(() => {
+    const card = cardRef.current
+    const video = videoRef.current
+    if (!card || !video) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Prime the metadata so play() is instant on hover
+          video.preload = 'metadata'
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '400px' }
+    )
+    observer.observe(card)
+    return () => observer.disconnect()
+  }, [])
+
+  function handleMove(e: React.MouseEvent<HTMLAnchorElement>) {
     const el = cardRef.current
     if (!el) return
     const rect = el.getBoundingClientRect()
     const x = (e.clientX - rect.left) / rect.width - 0.5
     const y = (e.clientY - rect.top) / rect.height - 0.5
-    // ±12deg max tilt — strong, theatrical. Cards feel like they have weight
-    // and respond physically to the cursor, not just a hint of motion.
     el.style.setProperty('--tilt-x', `${-y * 12}deg`)
     el.style.setProperty('--tilt-y', `${x * 12}deg`)
   }
 
+  function handleEnter() {
+    const v = videoRef.current
+    if (!v) return
+    v.play().catch(() => {
+      // autoplay may be blocked or file missing — silently fall back to poster
+    })
+  }
+
   function handleLeave() {
     const el = cardRef.current
-    if (!el) return
-    el.style.setProperty('--tilt-x', '0deg')
-    el.style.setProperty('--tilt-y', '0deg')
+    if (el) {
+      el.style.setProperty('--tilt-x', '0deg')
+      el.style.setProperty('--tilt-y', '0deg')
+    }
+    const v = videoRef.current
+    if (v) {
+      v.pause()
+      v.currentTime = 0
+    }
   }
 
   return (
-    <div
-      ref={cardRef}
+    <Link
+      to={`/work/${project.slug}`}
+      ref={cardRef as unknown as React.RefObject<HTMLAnchorElement>}
       className={styles.card}
       onMouseMove={handleMove}
+      onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
+      aria-label={`Open ${project.caseStudyTitle}`}
     >
-      {/* cardInner gets the 3D transform; card outer stays flat to keep
-          its layout slot in the horizontal track stable */}
       <div className={styles.cardInner}>
-        {/* Color block — placeholder for project visual */}
+        {/* Visual area: colour block + hover-preview video on top */}
         <div className={styles.visual} style={{ background: project.accent }}>
-          <span className={`t-mono ${styles.cardNumber}`} style={{ color: '#000' }}>
+          {/* Hover-preview video — sits over the colour block.
+              If video.mp4 doesn't exist, error silently and the colour shows. */}
+          <video
+            ref={videoRef}
+            className={styles.cardVideo}
+            src={`/work/${project.slug}/video.mp4`}
+            poster={`/work/${project.slug}/poster.jpg`}
+            muted
+            loop
+            playsInline
+            preload="none"
+            onLoadedData={() => setVideoReady(true)}
+            onError={() => setVideoReady(false)}
+          />
+          <span
+            className={`t-mono ${styles.cardNumber}`}
+            style={{ color: videoReady ? '#fff' : '#000' }}
+          >
             {project.id}
           </span>
         </div>
 
-        {/* Meta row */}
         <div className={styles.cardMeta}>
           <span className={`t-mono ${styles.cardCategory}`}>{project.category}</span>
           <span className={`t-mono ${styles.cardYear}`}>{project.year}</span>
         </div>
 
-        {/* Title */}
         <h3 className={`t-display ${styles.cardTitle}`}>
           {project.title.split('\n').map((line, i) => (
             <span key={i} className={styles.cardTitleLine}>{line}</span>
           ))}
         </h3>
 
-        {/* Description */}
         <p className={`t-body ${styles.cardDesc}`}>{project.description}</p>
         <span className={`t-mono ${styles.cardClient}`}>{project.client}</span>
       </div>
-    </div>
+    </Link>
   )
 }
