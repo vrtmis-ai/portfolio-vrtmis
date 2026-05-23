@@ -118,7 +118,7 @@ export function Work() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <span className="t-label">→ Selected Work</span>
+          <span className="t-label">Selected Work</span>
           <span className={`t-label ${styles.count}`}>05 / Projects</span>
         </motion.div>
         <h2 className={`t-display ${styles.sectionTitle}`}>
@@ -171,7 +171,7 @@ export function Work() {
 
               {/* Caption — always visible above the media */}
               <div className={styles.horizonCaption}>
-                <span className="t-label">→ Until next show</span>
+                <span className="t-label">Until next show</span>
               </div>
             </div>
           </motion.div>

@@ -37,7 +37,7 @@ export function Numbers() {
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.7 }}
         >
-          → By the numbers
+          By the numbers
         </motion.span>
       </div>
       <div className={styles.grid}>

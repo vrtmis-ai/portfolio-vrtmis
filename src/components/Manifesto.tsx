@@ -45,7 +45,7 @@ export function Manifesto() {
   return (
     <section ref={sectionRef} className={styles.section}>
       <div className={styles.header}>
-        <span className="t-label">→ Manifesto</span>
+        <span className="t-label">Manifesto</span>
       </div>
       <p className={styles.statement}>
         {words.map((w, i) => (

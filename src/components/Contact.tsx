@@ -20,7 +20,7 @@ export function Contact() {
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8 }}
         >
-          → Contact
+          Contact
         </motion.span>
 
         <h2 className={`t-display ${styles.cta}`}>

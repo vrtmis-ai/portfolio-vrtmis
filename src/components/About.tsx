@@ -61,7 +61,7 @@ export function About() {
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8 }}
         >
-          → About
+          About
         </motion.span>
         <motion.h2
           className={`t-display ${styles.sectionTitle}`}

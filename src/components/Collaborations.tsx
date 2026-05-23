@@ -59,7 +59,7 @@ export function Collaborations() {
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <span className="t-label">→ Collaborations &amp; Clients</span>
+          <span className="t-label">Collaborations &amp; Clients</span>
           <span className={`t-label ${styles.count}`}>20+ · Selected</span>
         </motion.div>
       </div>

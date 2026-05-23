@@ -68,7 +68,7 @@ export function Disciplines() {
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <span className="t-label">→ Core Disciplines</span>
+          <span className="t-label">Core Disciplines</span>
           <span className={`t-label ${styles.count}`}>06 / Stacks</span>
         </motion.div>
         <h2 className={`t-display ${styles.sectionTitle}`}>

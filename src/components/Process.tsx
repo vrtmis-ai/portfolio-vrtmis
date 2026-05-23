@@ -62,7 +62,7 @@ export function Process({ mouse }: ProcessProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            → How I work
+            How I work
           </motion.span>
           <h2 className={`t-display ${styles.title}`}>
             The Process<span className={styles.titleDot}>.</span>
