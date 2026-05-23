@@ -5,10 +5,12 @@ import './index.css'
 import App from './App'
 import { CaseStudy } from './routes/CaseStudy'
 import { WorkIndex } from './routes/WorkIndex'
+import { ScrollToTopOnNavigate } from './components/ScrollToTopOnNavigate'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
+      <ScrollToTopOnNavigate />
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/work" element={<WorkIndex />} />

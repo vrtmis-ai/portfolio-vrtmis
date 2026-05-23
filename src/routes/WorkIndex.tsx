@@ -179,7 +179,7 @@ function ProjectTile({ project, index }: { project: Project; index: number }) {
           <video
             ref={videoRef}
             className={styles.tileVideo}
-            src={`/work/${project.slug}/video.mp4`}
+            src={`/work/${project.slug}/preview.mp4`}
             poster={`/work/${project.slug}/poster.jpg`}
             muted
             loop

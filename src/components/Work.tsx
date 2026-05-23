@@ -201,12 +201,12 @@ function ProjectCard({ project }: { project: Project }) {
       <div className={styles.cardInner}>
         {/* Visual area: colour block + hover-preview video on top */}
         <div className={styles.visual} style={{ background: project.accent }}>
-          {/* Hover-preview video — sits over the colour block.
-              If video.mp4 doesn't exist, error silently and the colour shows. */}
+          {/* Hover-preview = the 7s brutalist teaser. The case-study page
+              uses the longer video.mp4 — different file. */}
           <video
             ref={videoRef}
             className={styles.cardVideo}
-            src={`/work/${project.slug}/video.mp4`}
+            src={`/work/${project.slug}/preview.mp4`}
             poster={`/work/${project.slug}/poster.jpg`}
             muted
             loop

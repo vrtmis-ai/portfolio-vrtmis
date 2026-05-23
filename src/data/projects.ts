@@ -49,7 +49,7 @@ export const PROJECTS: Project[] = [
     caseStudyTitle: 'Alireza Ghorbani — Live Concert',
     client: 'Live Concert',
     category: 'Architectural Mapping',
-    year: '2024',
+    year: '2025',
     description: 'Large-scale architectural video mapping for major live concert.',
     longDescription:
       'Architectural video mapping for one of Iran\'s most prominent live concert productions. Concept, animation, on-site execution. Twelve projectors, forty thousand lumens, single-shot show.',
@@ -64,7 +64,7 @@ export const PROJECTS: Project[] = [
     caseStudyTitle: 'Oliver Twist — Theatre',
     client: 'Mr. Parsaei · Theatre',
     category: 'AI Teaser + Stage Mapping',
-    year: '2024',
+    year: '2025',
     description: 'AI-generated teaser combined with live stage mapping for theatre production.',
     longDescription:
       'A two-part visual brief for a theatre production directed by Mr. Parsaei. Part one: an AI-generated teaser combining traditional compositing with generative passes. Part two: real-time stage projection mapping integrated with the live performance.',
@@ -78,7 +78,7 @@ export const PROJECTS: Project[] = [
     caseStudyTitle: 'My Baby — Product Launch',
     client: 'Product Launch',
     category: 'Architectural Mapping',
-    year: '2024',
+    year: '2025',
     description: 'Architectural video mapping for live product launch event.',
     longDescription:
       'Architectural video mapping for a live product launch event. Brand-driven visual narrative on the venue\'s exterior. Concept design, animation, and on-site cueing through Resolume Arena.',
@@ -93,7 +93,7 @@ export const PROJECTS: Project[] = [
     caseStudyTitle: 'Tehran University of Art — Student Day',
     client: 'Student Day',
     category: 'Video Mapping · Workshop',
-    year: '2023',
+    year: '2024',
     description: '1,000+ audience · 48hr delivery · Free workshop on real-time visual systems.',
     longDescription:
       'A single-day visual installation for Tehran University of Art\'s Student Day. One thousand attendees, forty-eight hours from brief to first cue. Paired with a free public workshop on real-time visual systems.',
@@ -108,7 +108,7 @@ export const PROJECTS: Project[] = [
     caseStudyTitle: 'Music Video VFX — Multi-artist',
     client: 'Various',
     category: 'Greenscreen · CGI · AI',
-    year: '2023',
+    year: '2024',
     description: 'Greenscreen compositing, CGI integration, and AI visual pipeline.',
     longDescription:
       'A series of music videos for Tehran-based artists. Greenscreen compositing, CGI integration, and a generative AI pipeline for environment extension. Worked across After Effects, ComfyUI, and Houdini.',
@@ -122,7 +122,7 @@ export const PROJECTS: Project[] = [
     caseStudyTitle: 'Esteghlal — Stadium Mapping',
     client: 'Esteghlal F.C.',
     category: 'Architectural Mapping',
-    year: '2024',
+    year: '2025',
     description: 'Stadium-scale architectural video mapping for a major sport event.',
     longDescription:
       'Large-format architectural video mapping for an Esteghlal football club event. Concept, animation, multi-projector synchronisation, on-site execution under tight crew constraints.',
@@ -136,7 +136,7 @@ export const PROJECTS: Project[] = [
     caseStudyTitle: 'Tigard — Event Mapping',
     client: 'Tigard',
     category: 'Video Mapping',
-    year: '2024',
+    year: '2025',
     description: 'Architectural mapping for a live brand event.',
     longDescription:
       'Single-night video mapping installation for a Tigard live event. Brand-driven motion choreographed to the venue\'s architecture, cued live through Resolume.',
@@ -150,7 +150,7 @@ export const PROJECTS: Project[] = [
     caseStudyTitle: 'U Bank — Brand Campaign VFX',
     client: 'U Bank',
     category: 'VFX & Compositing',
-    year: '2024',
+    year: '2025',
     description: 'VFX compositing and motion design for U Bank brand campaign.',
     longDescription:
       'Full VFX and compositing pass for U Bank\'s brand campaign series. Greenscreen integration, environment extension, and motion graphics across multiple spots.',
@@ -164,7 +164,7 @@ export const PROJECTS: Project[] = [
     caseStudyTitle: 'Carkook — CGI Integration',
     client: 'Carkook',
     category: 'CGI · VFX',
-    year: '2024',
+    year: '2025',
     description: 'CGI product visualization with live-action integration.',
     longDescription:
       'Full CGI product visualization for Carkook with photoreal integration into live-action plates. Modeling, look-dev, lighting, compositing in a single hand.',
@@ -178,7 +178,7 @@ export const PROJECTS: Project[] = [
     caseStudyTitle: 'Serkan Filter — Filimo Teaser',
     client: 'Serkan · Filimo',
     category: 'Ad Roll · Compositing',
-    year: '2024',
+    year: '2025',
     description: 'Ad roll and teaser VFX for the Serkan Filter Filimo series.',
     longDescription:
       'Ad-roll and teaser package for the Serkan Filter Filimo series. Brand-aligned color treatment, VFX compositing, and short-form delivery cuts.',
@@ -192,7 +192,7 @@ export const PROJECTS: Project[] = [
     caseStudyTitle: 'Fashion Documentary — Intro',
     client: 'Documentary Production',
     category: 'Editing · Title Design',
-    year: '2023',
+    year: '2024',
     description: 'Title sequence and intro edit for a fashion documentary.',
     longDescription:
       'Intro sequence and title design for a long-form fashion documentary. Color, rhythm, and motion-typography choreographed to the music bed.',
