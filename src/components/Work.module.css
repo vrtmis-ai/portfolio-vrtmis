@@ -38,10 +38,10 @@
 /* ── Scroll container — tall, gets pinned ── */
 .scrollContainer {
   position: relative;
-  /* Tall enough for 5 project cards + endCap + slim horizon to slide past
-     horizontally inside the pin. Shorter than before because the x range
-     was tightened (-70% → -64%) so the horizon lands right of centre. */
-  height: 320vh;
+  /* x-travel is now only 55% of the track (was 64%), and the FINAL 20% of
+     scroll is a hold for dwell on the horizon. Total height reduced to
+     match — section feels lighter, exits faster after the horizon arrives. */
+  height: 260vh;
 }
 
 .sticky {

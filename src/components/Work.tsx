@@ -97,15 +97,14 @@ export function Work() {
   /**
    * Translate the track horizontally based on vertical scroll.
    *
-   * Calibration: at scrollProgress = 1 the HORIZON tile must land in the
-   * right half of the viewport — not slide past centre. Math (desktop):
-   *   track total  ≈ 3650px
-   *   horizon left edge in track ≈ 3170px
-   *   to put horizon LEFT edge at ~55% across viewport (right of centre),
-   *   shift the track ≈ -64%.
-   * Holds the final position from 0.92 → 1 so the user can dwell on it.
+   * Calibration: at scrollProgress = 1 the HORIZON tile must land CLEARLY
+   * in the right side of the viewport — not at the centre, not crossing it.
+   *   shift  -55% → horizon left edge sits around 70% across the viewport
+   *   final card body fills the right third while project cards are visible
+   *   on the left two-thirds.
+   * Long hold (0.80 → 1) so the user gets to dwell on the closing frame.
    */
-  const x = useTransform(smoothProgress, [0, 0.92, 1], ['0%', '-64%', '-64%'])
+  const x = useTransform(smoothProgress, [0, 0.80, 1], ['0%', '-55%', '-55%'])
 
   return (
     <section className={styles.work} id="work">

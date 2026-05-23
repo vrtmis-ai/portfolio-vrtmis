@@ -55,6 +55,42 @@ html {
   --space-xl: 48px;
   --space-2xl: 80px;
   --space-section: 120px;
+
+  /* ── Semantic border tokens — pre-tinted so they work in both themes ── */
+  --border-faint:  oklch(94% 0.008 30 / 0.06);
+  --border-soft:   oklch(94% 0.008 30 / 0.10);
+  --border-strong: oklch(94% 0.008 30 / 0.18);
+  --wash-soft:     oklch(8% 0.012 30 / 0.25);
+  --wash-strong:   oklch(8% 0.012 30 / 0.55);
+
+  color-scheme: dark;
+}
+
+/* ═══════════════════════════════════════════════
+   LIGHT THEME — invert the lightness scale.
+   Each token keeps its "rank" but flips L%, so component code
+   like `background: var(--pitch)` reads as "page surface" in BOTH themes.
+   Reactor orange stays untouched (it's the brand accent).
+   ═══════════════════════════════════════════════ */
+[data-theme="light"] {
+  --pitch:    oklch(96% 0.005 30);   /* was 8% — page surface */
+  --char:     oklch(92% 0.006 30);
+  --lead:     oklch(86% 0.008 30);
+  --iron:     oklch(64% 0.012 30);
+  --concrete: oklch(50% 0.013 30);
+  --bone:     oklch(36% 0.014 30);
+  --chalk:    oklch(22% 0.013 30);
+  --paper:    oklch(14% 0.012 30);
+  --linen:    oklch(8% 0.010 30);    /* was 94% — primary text */
+
+  /* Borders flip too (dark hairlines on light bg) */
+  --border-faint:  oklch(8% 0.012 30 / 0.08);
+  --border-soft:   oklch(8% 0.012 30 / 0.12);
+  --border-strong: oklch(8% 0.012 30 / 0.22);
+  --wash-soft:     oklch(94% 0.008 30 / 0.35);
+  --wash-strong:   oklch(94% 0.008 30 / 0.65);
+
+  color-scheme: light;
 }
 
 /* ── Body ── */

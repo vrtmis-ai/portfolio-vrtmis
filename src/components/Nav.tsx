@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { ThemeToggle } from './ThemeToggle'
 import styles from './Nav.module.css'
 
 /**
@@ -29,13 +30,16 @@ export function Nav() {
         </span>
       </a>
 
-      {/* Desktop links */}
-      <ul className={`${styles.links} ${open ? styles.linksOpen : ''}`}>
-        <li><a href="#work" onClick={() => setOpen(false)}>Work</a></li>
-        <li><a href="#about" onClick={() => setOpen(false)}>About</a></li>
-        <li><a href="#collaborations" data-hover onClick={() => setOpen(false)}>Clients</a></li>
-        <li><a href="#contact" onClick={() => setOpen(false)}>Contact</a></li>
-      </ul>
+      {/* Desktop links + theme toggle */}
+      <div className={styles.rightCluster}>
+        <ul className={`${styles.links} ${open ? styles.linksOpen : ''}`}>
+          <li><a href="#work" onClick={() => setOpen(false)}>Work</a></li>
+          <li><a href="#about" onClick={() => setOpen(false)}>About</a></li>
+          <li><a href="#collaborations" data-hover onClick={() => setOpen(false)}>Clients</a></li>
+          <li><a href="#contact" onClick={() => setOpen(false)}>Contact</a></li>
+        </ul>
+        <ThemeToggle />
+      </div>
 
       {/* Mobile hamburger */}
       <button

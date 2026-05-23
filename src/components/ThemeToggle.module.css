@@ -1,0 +1,40 @@
+/* ═══════════════════════════════════════════════
+   THEME TOGGLE — Single circular button in the nav.
+   ═══════════════════════════════════════════════ */
+
+.toggle {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0.5px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--linen);
+  cursor: none;
+  padding: 0;
+  transition:
+    border-color 0.3s cubic-bezier(0.32, 0.72, 0, 1),
+    color        0.3s cubic-bezier(0.32, 0.72, 0, 1),
+    background   0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.toggle:hover {
+  border-color: var(--reactor);
+  color: var(--reactor);
+}
+
+.icon {
+  display: block;
+}
+
+/* Cross-fade between sun and moon — both occupy the same SVG cell */
+.sun,
+.moon {
+  transition: opacity 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+  transform-origin: center;
+}
+
+.iconShown { opacity: 1; }
+.iconHidden { opacity: 0; }
