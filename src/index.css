@@ -317,14 +317,18 @@ section {
 }
 
 /* ── State switching ───────────────────────────────────────── */
+/* Hover state INTENTIONALLY DISABLED — the arrow stays the cursor across
+   every link, button, and nav item. The .cursor-disc element is kept so
+   the JSX in App / CaseStudy doesn't need to change, but it never appears. */
 .cursor.state-hover .cursor-arrow-glass,
 .cursor.state-hover .cursor-arrow-outline {
-  opacity: 0;
+  /* keep showing the arrow on hover too */
+  opacity: 1;
 }
 
+/* Disc was the previous hover treatment — disabled. Arrow stays in all states. */
 .cursor.state-hover .cursor-disc {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
+  opacity: 0;
 }
 
 /* ── Responsive ── */
