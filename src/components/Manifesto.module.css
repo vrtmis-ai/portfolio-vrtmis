@@ -44,6 +44,32 @@
   color: var(--reactor);
 }
 
+/* ── Inline typography pill — image on the text baseline ────────
+   Width is in `em` units so it scales with the heading font size.
+   If the image at the given src fails to load, the iron-colored
+   background underneath shows through as a graceful fallback. */
+.inlineImg {
+  display: inline-block;
+  width: 2em;
+  height: 0.7em;
+  border-radius: 999px;
+  background-color: var(--iron);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  vertical-align: -0.04em;
+  margin: 0 0.18em;
+  /* Subtle inner highlight makes it read like a glass pill */
+  box-shadow:
+    inset 0 0.5px 0 oklch(94% 0.008 30 / 0.25),
+    inset 0 -0.5px 0 oklch(8% 0.012 30 / 0.35);
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.inlineImg:hover {
+  transform: scale(1.08);
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .section {
