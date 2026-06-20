@@ -364,6 +364,16 @@ export function StudioRoom() {
   const wallVisible = phase === 'wall'
   const heroVisible = phase === 'room' && heroReady
 
+  // Warm the per-TV hover clips once the wall is reached, so the first hover
+  // plays instantly instead of stalling on a network fetch (the overlay video
+  // is preload="none", and on a CDN that first fetch is a visible delay).
+  const tvWarmedRef = useRef(false)
+  useEffect(() => {
+    if (!wallVisible || tvWarmedRef.current) return
+    tvWarmedRef.current = true
+    for (const url of Object.values(TV_VIDEOS)) fetch(url).catch(() => {})
+  }, [wallVisible])
+
   return (
     <section className={styles.section} id="studio" aria-label="Studio · selected work">
       <div ref={containerRef} className={styles.scrollRange}>
