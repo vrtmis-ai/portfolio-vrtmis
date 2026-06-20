@@ -21,12 +21,14 @@ redeploys** (~1–2 min). Dev server: `npm run dev` → `localhost:5173`.
   be **build_type=workflow** (the `*.github.io` repo auto-enables *legacy* branch
   mode; first deploy failed until switched via `PUT /repos/.../pages
   {"build_type":"workflow"}`).
-- **Push auth gotcha.** Git Credential Manager on this machine holds the user's
-  **brother's** account (`farboudtavasoli-beep`, no push rights) → plain `git push`
-  404s. Push as `vrtmis-ai` with a classic PAT scoped **`repo` + `workflow`**, used
-  inline + unstored:
+- **Push auth.** GCM is now set to the owner `vrtmis-ai`, so a plain `git push`
+  works. (It previously held the user's **brother's** account
+  `farboudtavasoli-beep`, no push rights → 403; that was erased and the `vrtmis-ai`
+  PAT scoped **`repo` + `workflow`** stored in Windows Credential Manager, with
+  `credential.https://github.com.username=vrtmis-ai` set global.) If that PAT
+  expires, inline fallback:
   `git -c credential.helper= push "https://vrtmis-ai:<TOKEN>@github.com/vrtmis-ai/vrtmis-ai.github.io.git" main:main`.
-  History is ~300 MB so a single push 408s on this connection — push
+  History is ~300 MB so a *first/large* push 408s on this connection — push
   **commit-by-commit** to resume safely. `http.postBuffer`/`http.lowSpeedLimit` set
   repo-local. Fetches need no auth (repo is public).
 
