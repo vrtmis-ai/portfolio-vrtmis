@@ -11,6 +11,12 @@ interface CTAButtonProps {
   onClick?: () => void
   /** Disable magnetic pull (default on). */
   magnetic?: boolean
+  /**
+   * Visual style. 'outline' = the default orange outline that fills on hover.
+   * 'glass' = an iOS-style Liquid Glass capsule (frosted backdrop-blur, specular
+   * top edge, reactor inner glow) for hero use over imagery.
+   */
+  variant?: 'outline' | 'glass'
 }
 
 /**
@@ -30,8 +36,10 @@ export function CTAButton({
   external = false,
   onClick,
   magnetic = true,
+  variant = 'outline',
 }: CTAButtonProps) {
   const btnRef = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null)
+  const className = `${styles.cta} ${variant === 'glass' ? styles.glass : ''}`
 
   function handleMove(e: React.MouseEvent) {
     if (!magnetic || !btnRef.current) return
@@ -66,7 +74,7 @@ export function CTAButton({
       <a
         ref={btnRef as React.RefObject<HTMLAnchorElement>}
         href={href}
-        className={styles.cta}
+        className={className}
         onClick={onClick}
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
@@ -81,8 +89,7 @@ export function CTAButton({
     <button
       ref={btnRef as React.RefObject<HTMLButtonElement>}
       type="button"
-      className={styles.cta}
-      data-cursor={cursor}
+      className={className}
       onClick={onClick}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}

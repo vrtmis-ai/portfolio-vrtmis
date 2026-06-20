@@ -1,0 +1,125 @@
+/* ═══════════════════════════════════════════════
+   404 — SIGNAL LOST. A dead CRT channel.
+   Same motif as the StudioRoom TV wall: when the
+   address has no signal, you get static.
+   ═══════════════════════════════════════════════ */
+
+.page {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 120px clamp(24px, 5vw, 80px) 80px;
+  overflow: hidden;
+  /* The dead channel is dark in BOTH themes — a TV doesn't theme-flip. */
+  background: oklch(8% 0.012 30);
+}
+
+/* Animated CRT noise canvas, painted by JS. Sits under the copy. */
+.static {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Slow horizontal tracking bar drifting down the "screen" */
+.trackingBar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    oklch(94% 0.008 30 / 0.05) 45%,
+    oklch(94% 0.008 30 / 0.09) 50%,
+    oklch(94% 0.008 30 / 0.05) 55%,
+    transparent
+  );
+  pointer-events: none;
+  animation: track 7s linear infinite;
+}
+
+@keyframes track {
+  from { top: -15%; }
+  to { top: 110%; }
+}
+
+/* Soft CRT vignette so the corners fall off like glass */
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    oklch(0% 0 0 / 0.5) 100%
+  );
+}
+
+.channel {
+  position: relative;
+  z-index: 2;
+  color: var(--on-media-dim);
+  letter-spacing: 0.22em;
+}
+
+.title {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  font-size: clamp(44px, 9vw, 128px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-align: center;
+  /* On-media: stays light over the static in both themes */
+  color: var(--on-media);
+}
+
+.titleAccent {
+  color: var(--reactor);
+}
+
+.readout {
+  position: relative;
+  z-index: 2;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--on-media-dim);
+  text-align: center;
+  max-width: 90vw;
+  overflow-wrap: anywhere;
+}
+
+.homeLink {
+  position: relative;
+  z-index: 2;
+  margin-top: 18px;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--on-media);
+  border: 1px solid var(--reactor);
+  padding: 12px 22px;
+  transition: background 0.3s var(--ease-out-expo), color 0.3s var(--ease-out-expo);
+}
+
+.homeLink:hover {
+  background: var(--reactor);
+  color: oklch(8% 0.012 30);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trackingBar {
+    animation: none;
+    opacity: 0;
+  }
+}

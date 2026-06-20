@@ -12,11 +12,11 @@ import styles from './NowPlaying.module.css'
 
 const NOW = {
   // Manually update — keep this fresh.
-  title: 'Stage mapping for Eslami Theatre',
-  client: 'Mr. Parsaei · Theatre Project',
-  status: 'Pre-production',
-  week: '21 / 2026',
-  detail: 'Designing the projection plan for a 3-act stage. Real-time TouchDesigner cues triggered by audio markers. AI passes for set extension.',
+  title: 'Marketing campaign for Bad Station',
+  client: 'Bad Station · Fashion Brand',
+  status: 'In production',
+  week: '22 / 2026',
+  detail: 'Full visual campaign. Motion, compositing, and AI-assisted content for brand launch across social and digital channels.',
 }
 
 export function NowPlaying() {

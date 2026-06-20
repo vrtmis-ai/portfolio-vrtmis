@@ -4,42 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- ── Primary SEO ── -->
-    <title>Mahbod Tavassoli — Visual Artist & AI Creative · Tehran</title>
-    <meta
-      name="description"
-      content="Tehran-based visual artist working in VFX, video mapping, AI visual production, motion graphics, and live show visuals. Ten years of building images that didn't exist before."
-    />
+    <!-- Page-level title / description / canonical / Open Graph / Twitter are
+         rendered PER ROUTE by React (App, WorkIndex, CaseStudy) and baked into
+         each page by the prerender step. Kept out of this template so prerendered
+         pages don't end up with duplicate title/og tags. -->
     <meta name="author" content="Mahbod Tavassoli" />
     <meta name="keywords" content="Mahbod Tavassoli, visual artist, AI creative, VFX, video mapping, AI visual production, motion graphics, live visuals, Tehran, artemis.studio, TouchDesigner, ComfyUI, Resolume" />
-    <link rel="canonical" href="https://artemis.studio/" />
 
-    <!-- ── Favicon ── -->
+    <!-- ── Favicon — SVG primary (crisp at any size), PNG fallback ── -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" href="/mt-logo.png" />
     <link rel="apple-touch-icon" href="/mt-logo.png" />
     <meta name="theme-color" content="#000000" />
 
-    <!-- ── Open Graph (Facebook, LinkedIn, Telegram, Discord) ── -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://artemis.studio/" />
-    <meta property="og:title" content="Mahbod Tavassoli — Visual Artist & AI Creative" />
-    <meta
-      property="og:description"
-      content="Tehran-based visual artist. VFX, video mapping, AI visual production, motion, live show visuals. Ten years of building images that didn't exist before."
-    />
-    <meta property="og:image" content="https://artemis.studio/og-cover.jpg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:site_name" content="artemis.studio" />
+    <!-- The studio intro <video> is mounted only when the first-load veil
+         lifts, so its dark poster isn't fetched until then. Preload it so the
+         dark frame paints instantly on mount (no flash of the lit room behind
+         it before the dark→lights-up intro starts). -->
+    <link rel="preload" as="image" href="/room/scene-1-dark.jpg" />
 
-    <!-- ── Twitter Card ── -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Mahbod Tavassoli — Visual Artist & AI Creative" />
-    <meta name="twitter:description" content="Tehran-based visual artist. VFX, video mapping, AI production, live show visuals. Ten years of building images that didn't exist before." />
-    <meta name="twitter:image" content="https://artemis.studio/og-cover.jpg" />
-
-    <!-- ── Schema.org Person JSON-LD ── -->
+    <!-- ── Schema.org Person JSON-LD (site-wide author entity) ── -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -78,7 +62,11 @@
         "@type": "CollegeOrUniversity",
         "name": "Tehran South Azad University"
       },
-      "sameAs": []
+      "sameAs": [
+        "https://instagram.com/thvrtmis",
+        "https://t.me/vrtmis",
+        "https://linkedin.com/in/mahbod-tavassoli-thvrtmis"
+      ]
     }
     </script>
 
@@ -92,6 +80,22 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Speculation Rules: prerender the work pages the moment a link to them
+         is hovered/about to be clicked, so the first hard navigation to /work
+         (or a shared case-study URL) paints instantly. Supported browsers
+         only; others ignore it. Pairs with the in-app hover chunk-preload. -->
+    <script type="speculationrules">
+    {
+      "prerender": [
+        {
+          "where": { "href_matches": "/work*" },
+          "eagerness": "moderate"
+        }
+      ]
+    }
+    </script>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,0 +1,114 @@
+/* ═══════════════════════════════════════════════
+   SIGNAL PATH — node-wire pipeline under "What I do."
+   Rail draws in; a reactor pulse travels the wire via a
+   Houdini-registered custom property.
+   ═══════════════════════════════════════════════ */
+
+/* Registered so the browser can tween the gradient stop smoothly. Without
+   @property support the value stays at 0% and the pulse simply sits still. */
+@property --signal-pos {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+.wrap {
+  padding: 0 clamp(24px, 5vw, 80px);
+  margin-bottom: 64px;
+}
+
+.inner {
+  position: relative;
+  height: 64px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Base wire — faint, drawn left→right on scroll-in */
+.rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 11px;
+  height: 1px;
+  background: var(--border-strong);
+  transform-origin: left center;
+}
+
+/* Travelling reactor pulse — the Houdini bit. A narrow bright band whose
+   centre (--signal-pos) sweeps across, fading at both ends. */
+.pulse {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 10px;
+  height: 3px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent calc(var(--signal-pos) - 10%),
+    var(--reactor) var(--signal-pos),
+    transparent calc(var(--signal-pos) + 10%)
+  );
+  filter: drop-shadow(0 0 5px var(--reactor-glow));
+  animation: signalTravel 4s linear infinite;
+}
+
+@keyframes signalTravel {
+  from { --signal-pos: -10%; }
+  to { --signal-pos: 110%; }
+}
+
+/* Four evenly-spread nodes sitting on the wire */
+.nodes {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--pitch);
+  border: 1px solid var(--reactor);
+  /* centre the 9px dot on the 1px rail at top:11px */
+  margin-top: 7px;
+}
+
+.nodeNum {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--reactor);
+}
+
+.nodeLabel {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--concrete);
+}
+
+/* First/last labels hug the edges so they don't clip */
+.node:first-child {
+  align-items: flex-start;
+}
+
+.node:last-child {
+  align-items: flex-end;
+}
+
+@media (max-width: 640px) {
+  .nodeLabel {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+}

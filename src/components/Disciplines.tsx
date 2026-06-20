@@ -1,6 +1,8 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { SplitText } from './SplitText'
+import { DisciplineIcon } from './DisciplineIcons'
+import { SignalPath } from './SignalPath'
 import styles from './Disciplines.module.css'
 
 /**
@@ -76,6 +78,9 @@ export function Disciplines() {
         </h2>
       </div>
 
+      {/* Pipeline diagram: the path the work travels */}
+      <SignalPath />
+
       <div className={styles.grid}>
         {DISCIPLINES.map((d, index) => (
           <DisciplineCard key={d.num} d={d} index={index} isInView={isInView} />
@@ -89,21 +94,15 @@ function DisciplineCard({ d, index, isInView }: { d: Discipline; index: number; 
   const ref = useRef<HTMLDivElement>(null)
 
   /**
-   * Cursor over card — drives:
-   *   --mx/--my : spotlight position (CSS radial gradient)
-   *   --tilt-x/y : 3D perspective tilt (subtle, ±4deg)
-   * Icon stays contained because card now has overflow: hidden.
+   * Cursor over card — drives the 3D perspective tilt (subtle, ±4deg).
+   * Icon stays contained because card has overflow: hidden.
    */
   function handleMove(e: React.MouseEvent<HTMLDivElement>) {
     const el = ref.current
     if (!el) return
     const rect = el.getBoundingClientRect()
-    const xPct = ((e.clientX - rect.left) / rect.width) * 100
-    const yPct = ((e.clientY - rect.top) / rect.height) * 100
     const x = (e.clientX - rect.left) / rect.width - 0.5
     const y = (e.clientY - rect.top) / rect.height - 0.5
-    el.style.setProperty('--mx', `${xPct}%`)
-    el.style.setProperty('--my', `${yPct}%`)
     el.style.setProperty('--tilt-x', `${-y * 4}deg`)
     el.style.setProperty('--tilt-y', `${x * 4}deg`)
   }
@@ -127,7 +126,9 @@ function DisciplineCard({ d, index, isInView }: { d: Discipline; index: number; 
     >
       <div className={styles.cardInner}>
         <span className={`t-mono ${styles.cardNum}`}>{d.num}</span>
-        <span className={styles.cardIcon} aria-hidden>{d.icon}</span>
+        <span className={styles.cardIcon} aria-hidden>
+          <DisciplineIcon num={d.num} />
+        </span>
         <h3 className={styles.cardName}>{d.name}</h3>
         <p className={styles.cardTools}>{d.tools}</p>
       </div>

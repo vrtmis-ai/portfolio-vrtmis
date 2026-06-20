@@ -14,16 +14,19 @@ import styles from './IntroLoader.module.css'
  * Skipped automatically on refresh-within-session so the user isn't held up.
  */
 export function IntroLoader() {
-  const [show, setShow] = useState(true)
+  // Derive the initial visibility at mount: if the intro already played this
+  // session, start hidden (no synchronous setState in the effect below).
+  const [show, setShow] = useState(() => sessionStorage.getItem('intro-played') !== '1')
 
   useEffect(() => {
-    // If we've already shown the intro this session, skip.
-    if (sessionStorage.getItem('intro-played') === '1') {
-      setShow(false)
-      return
-    }
+    if (sessionStorage.getItem('intro-played') === '1') return
     const total = 1500 // ms until exit
     const t = setTimeout(() => {
+      // Tell StudioRoom the veil is lifting NOW, so it can mount + play its
+      // dark → lights-up intro in the open instead of unseen under the veil.
+      // Dispatch BEFORE setShow so the intro mounts in the same React commit
+      // the veil starts exiting (no flash of the lit room in between).
+      window.dispatchEvent(new Event('artemis:veil-lift'))
       setShow(false)
       sessionStorage.setItem('intro-played', '1')
     }, total)
@@ -32,7 +35,7 @@ export function IntroLoader() {
 
   return (
     <AnimatePresence>
-      {show && (
+      {show ? (
         <motion.div
           className={styles.veil}
           initial={{ y: 0 }}
@@ -67,7 +70,7 @@ export function IntroLoader() {
             transition={{ duration: 1.0, ease: 'easeInOut', delay: 0.2 }}
           />
         </motion.div>
-      )}
+      ) : null}
     </AnimatePresence>
   )
 }

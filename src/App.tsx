@@ -1,19 +1,16 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Hero } from './components/Hero'
 import { Nav } from './components/Nav'
 import { IntroLoader } from './components/IntroLoader'
-import { Manifesto } from './components/Manifesto'
-import { Numbers } from './components/Numbers'
-import { ScrollChapters } from './components/ScrollChapters'
-import { Process } from './components/Process'
+// import { Manifesto } from './components/Manifesto'       // removed — user feedback: content overload
+// import { Numbers } from './components/Numbers'            // removed — stats were inaccurate
+// import { ScrollChapters } from './components/ScrollChapters'  // removed — will be replaced with scroll-driven video
+// import { Process } from './components/Process'               // removed — user feedback: redundant with About
+import { StudioRoom } from './components/StudioRoom'
 import { Disciplines } from './components/Disciplines'
-import { Work } from './components/Work'
 import { About } from './components/About'
 import { Collaborations } from './components/Collaborations'
-import { Marquee } from './components/Marquee'
 import { NowPlaying } from './components/NowPlaying'
-import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { BackToTop } from './components/BackToTop'
 import { useSmoothScroll } from './hooks/useSmoothScroll'
@@ -22,25 +19,23 @@ import { useMouseInteraction } from './hooks/useMouseInteraction'
 /**
  * Page composition — Studio Floor narrative order.
  *
- *   1.  Hero            — title card.
- *   2.  Manifesto       — scroll-driven word colour-in statement.
- *   3.  Numbers         — counters that tick from 0 (years, projects, clients).
- *   4.  ScrollChapters  — cinematic placeholder scenes (user-authored assets).
- *   5.  Process         — sticky-pin two-column "how I work" (4 stages).
- *   6.  Disciplines     — 6 skill cards with 3D tilt on hover.
- *   7.  Marquee         — typographic divider.
- *   8.  Work            — horizontal-scroll project showcase.
- *   9.  Collaborations  — client grid.
- *  10.  NowPlaying      — what I'm working on this week.
- *  11.  About           — bio + fact sheet + grouped skills.
- *  12.  Contact         — outreach CTA.
- *  13.  Footer          — wrap.
+ *   1.  StudioRoom      — the opening: the title sits on the lit studio room,
+ *                         then the scroll turns the camera to the TV-wall gallery.
+ *   2.  Disciplines     — 6 skill cards with 3D tilt on hover.
+ *   3.  Collaborations  — "Trusted by" client-name marquee.
+ *   4.  NowPlaying      — what I'm working on this week.
+ *   5.  About           — bio + fact sheet + 3D notebook.
+ *   6.  Footer          — wrap.
+ *
+ * Contact is its own route (/contact), reached from the hero "Let's talk" CTA
+ * and the nav — not a scroll-to section. The old horizontal-scroll Work section
+ * is retired; StudioRoom's TV wall is the project gallery.
  */
 function App() {
-  const { scrollProgress, lenis } = useSmoothScroll()
-  // Single hook drives both the custom cursor AND the parallax mouse position.
-  // One global mousemove listener (passive) instead of two.
-  const { cursorRef, state, mouse } = useMouseInteraction()
+  const { lenis } = useSmoothScroll()
+  // Single hook drives the custom cursor (+ parallax mouse position for future scroll-video).
+  // One global mousemove listener (passive).
+  const { cursorRef, state } = useMouseInteraction()
 
   /**
    * Hash-aware scrolling.
@@ -67,47 +62,36 @@ function App() {
     return () => window.clearTimeout(timer)
   }, [location.hash, lenis])
 
-  /**
-   * Four cinematic scenes — a mini-arc, NOT a re-statement of Hero/About.
-   * Each one is a distinct moment in time: the room, the gear, the show, the after.
-   */
-  const chapters = [
-    {
-      id: 'studio',
-      type: 'placeholder' as const,
-      label: '01 / The Room',
-      heading: 'Two monitors.\nOne render queue.',
-      subheading: 'Late hours, hot RAM, no shortcuts.',
-      caption: 'artemis.studio',
-    },
-    {
-      id: 'gear',
-      type: 'placeholder' as const,
-      label: '02 / The Kit',
-      heading: 'Many instruments.\nOne head.',
-      subheading: 'Resolume · ComfyUI · TouchDesigner · After Effects · Cinema 4D.',
-      caption: 'Stack 2026',
-    },
-    {
-      id: 'showtime',
-      type: 'placeholder' as const,
-      label: '03 / Showtime',
-      heading: 'Friday, 9pm.\nDoors at ten.',
-      subheading: 'The cue list runs. The wall lights up. Forty thousand lumens, one shot.',
-      caption: 'Live Production',
-    },
-    {
-      id: 'after',
-      type: 'placeholder' as const,
-      label: '04 / After',
-      heading: 'Crew teardown.\nEmpty hall.',
-      subheading: 'The render survives in the archive. We start over.',
-      caption: 'End of show',
-    },
-  ]
-
   return (
     <>
+      {/* Home page-level SEO — React 19 hoists these into <head>; the prerender
+          step bakes them into the static dist/index.html for crawlers. */}
+      <title>Mahbod Tavassoli — Visual Artist &amp; AI Creative · Tehran</title>
+      <meta
+        name="description"
+        content="Tehran-based visual artist working in VFX, video mapping, AI visual production, motion graphics, and live show visuals. Ten years of building images that didn't exist before."
+      />
+      <link rel="canonical" href="https://artemis.studio/" />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://artemis.studio/" />
+      <meta property="og:title" content="Mahbod Tavassoli — Visual Artist & AI Creative" />
+      <meta
+        property="og:description"
+        content="Tehran-based visual artist. VFX, video mapping, AI visual production, motion, live show visuals. Ten years of building images that didn't exist before."
+      />
+      <meta property="og:image" content="https://artemis.studio/og-cover.jpg" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:locale" content="en_US" />
+      <meta property="og:site_name" content="artemis.studio" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Mahbod Tavassoli — Visual Artist & AI Creative" />
+      <meta
+        name="twitter:description"
+        content="Tehran-based visual artist. VFX, video mapping, AI production, live show visuals. Ten years of building images that didn't exist before."
+      />
+      <meta name="twitter:image" content="https://artemis.studio/og-cover.jpg" />
+
       {/* First-paint cinematic veil (session-gated) */}
       <IntroLoader />
 
@@ -129,27 +113,39 @@ function App() {
             strokeLinecap="square"
           />
         </svg>
-        {/* The bigger glass disc (visible in hover) — anchored to cursor (0,0)
-            and centred via transform translate(-50%, -50%) */}
+        {/* Pointing hand (visible on hover over links / TVs / the notebook) —
+            same orange hairline language as the arrow, so it stays ONE cursor */}
+        <svg className="cursor-hand" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path
+            d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5M14 10.5a1.5 1.5 0 0 1 3 0v1.5M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -5 -2.7c-.2-.3-1.4-2.4-3.3-5.7a1.5 1.5 0 0 1 .5-2 1.9 1.9 0 0 1 2.3.3l1.5 1.5"
+            stroke="var(--reactor)"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+
+        {/* The bigger glass disc — legacy hover treatment, kept hidden */}
         <div className="cursor-disc" />
       </div>
 
       {/* Top navigation */}
       <Nav />
 
-      {/* Page sections in narrative order */}
-      <Hero scrollProgress={scrollProgress} />
-      <Manifesto />
-      <Numbers />
-      <ScrollChapters chapters={chapters} mouse={mouse} />
-      <Process mouse={mouse} />
-      <Disciplines />
-      <Marquee />
-      <Work />
-      <Collaborations />
-      <NowPlaying />
-      <About />
-      <Contact />
+      {/* Page sections in narrative order. <main id="main"> is the
+          skip-link target and the page's landmark for assistive tech. */}
+      <main id="main">
+        {/* #top anchor for the footer / back-to-top links (the Hero used to
+            own this id; the studio room is now the opening). */}
+        <span id="top" aria-hidden />
+        {/* StudioRoom is now the opening: the title sits on the lit room,
+            then the scroll turns the camera to the TV-wall gallery. */}
+        <StudioRoom />
+        <Disciplines />
+        <Collaborations />
+        <NowPlaying />
+        <About />
+      </main>
       <Footer />
 
       {/* Fixed bottom-right scroll-builds-brackets back-to-top widget */}

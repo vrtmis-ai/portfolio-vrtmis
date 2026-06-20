@@ -47,34 +47,12 @@
 .card {
   --tilt-x: 0deg;
   --tilt-y: 0deg;
-  --mx: 50%;
-  --my: 50%;
   position: relative;
   background: var(--pitch);
   padding: 0;
   cursor: none;
-  overflow: hidden;            /* contains icon and spotlight */
+  overflow: hidden;            /* contains the icon */
   isolation: isolate;
-}
-
-/* Cursor-tracking spotlight — soft orange glow follows mouse inside card */
-.card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    220px circle at var(--mx) var(--my),
-    oklch(64% 0.225 36 / 0.16),
-    transparent 60%
-  );
-  opacity: 0;
-  transition: opacity 0.35s var(--ease-out-expo);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.card:hover::before {
-  opacity: 1;
 }
 
 /* Corner accent — top-right tick that grows on hover */
@@ -134,11 +112,34 @@
 
 /* Icon */
 .cardIcon {
-  font-size: 24px;
   color: var(--bone);
   display: inline-block;
   transition: color 0.3s var(--ease-out-expo),
               transform 0.4s var(--ease-out-expo);
+}
+
+.iconSvg {
+  width: 30px;
+  height: 30px;
+  display: block;
+  overflow: visible;
+}
+
+/* Each stroke is one unit long (pathLength=1); fully drawn at rest. */
+.iconPath {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+/* On hover the card's icon redraws itself, stroke by stroke (staggered by --i). */
+.card:hover .iconPath {
+  animation: iconDraw 0.7s var(--ease-out-expo) both;
+  animation-delay: calc(var(--i) * 0.09s);
+}
+
+@keyframes iconDraw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
 }
 
 /* Name */

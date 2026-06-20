@@ -3,16 +3,15 @@ import { useEffect, useRef, useState } from 'react'
 /**
  * useMouseInteraction — single global mousemove listener that powers BOTH:
  *
- *   1. Custom cursor:
- *      - `cursorRef`         — attach to the cursor DOM element
- *      - `state` 'idle'|'hover' — toggled when entering/leaving links/buttons
+ *   - `cursorRef`            — attach to the cursor DOM element
+ *   - `state` 'idle'|'hover' — toggled when entering/leaving links/buttons
  *
- *   2. Mouse position (normalized -1..+1 on each axis) for parallax:
- *      - `mouse.x / mouse.y`  — passed to scenes, cards, 3D, etc.
- *
- * Replaces the previous two hooks (useCursor + useMousePosition) which each
- * registered their own global `mousemove` handler — twice the work on every
- * frame for the same input event. Now one listener, both consumers.
+ * The cursor position is driven entirely through refs + a rAF transform write —
+ * NO React state updates on mousemove, so moving the mouse never re-renders the
+ * component tree. (`state` only flips on idle↔hover transitions, which are
+ * rare.) An earlier version also `setState`d a normalized parallax position on
+ * every move; nothing consumed it, so it just re-rendered the whole page on
+ * every pixel of movement — removed.
  *
  * Listeners are registered with `{ passive: true }` so the browser knows we
  * never call preventDefault — keeps scroll/touch threads unblocked.
@@ -22,7 +21,6 @@ export type CursorState = 'idle' | 'hover'
 export function useMouseInteraction() {
   const cursorRef = useRef<HTMLDivElement>(null)
   const [state, setState] = useState<CursorState>('idle')
-  const [mouse, setMouse] = useState({ x: 0, y: 0 })
 
   /** Smoothed cursor position (lerped each rAF tick) */
   const pos = useRef({ x: 0, y: 0 })
@@ -31,14 +29,8 @@ export function useMouseInteraction() {
 
   useEffect(() => {
     function handleMove(e: MouseEvent) {
-      // Raw target for the cursor lerp
+      // Raw target for the cursor lerp — a ref, so no re-render on move.
       target.current = { x: e.clientX, y: e.clientY }
-
-      // Normalized -1..+1 for parallax (Y inverted to match WebGL convention)
-      setMouse({
-        x: (e.clientX / window.innerWidth) * 2 - 1,
-        y: -(e.clientY / window.innerHeight) * 2 + 1,
-      })
     }
 
     function handleOver(e: MouseEvent) {
@@ -78,5 +70,5 @@ export function useMouseInteraction() {
     }
   }, [])
 
-  return { cursorRef, state, mouse }
+  return { cursorRef, state }
 }

@@ -1,7 +1,8 @@
 import { useRef } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { Nav } from '../components/Nav'
+import { TransitionLink } from '../components/TransitionLink'
 import { Footer } from '../components/Footer'
 import { BackToTop } from '../components/BackToTop'
 import { SplitText } from '../components/SplitText'
@@ -9,6 +10,7 @@ import { CTAButton } from '../components/CTAButton'
 import { getProject, PROJECTS } from '../data/projects'
 import { useSmoothScroll } from '../hooks/useSmoothScroll'
 import { useMouseInteraction } from '../hooks/useMouseInteraction'
+import { NotFoundPage } from './NotFoundPage'
 import styles from './CaseStudy.module.css'
 
 /**
@@ -28,18 +30,13 @@ export function CaseStudy() {
   // Mount the same global hooks the home page uses, so cursor + smooth
   // scroll + grain feel identical when navigating between pages.
   useSmoothScroll()
-  const { cursorRef, state, mouse } = useMouseInteraction()
+  const { cursorRef, state } = useMouseInteraction()
 
   const { slug } = useParams()
-  const project = getProject(slug)
 
-  if (!project) return <NotFound slug={slug} />
-
-  // Prev / Next neighbours in the PROJECTS array (wraps around)
-  const idx = PROJECTS.findIndex(p => p.slug === slug)
-  const prev = PROJECTS[(idx - 1 + PROJECTS.length) % PROJECTS.length]
-  const next = PROJECTS[(idx + 1) % PROJECTS.length]
-
+  // Scroll parallax for the full-bleed video. These hooks must run on EVERY
+  // render — before any early return — so the hook order stays stable even
+  // when the slug is unknown and we fall back to <NotFound/>.
   const videoRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: videoRef,
@@ -48,8 +45,13 @@ export function CaseStudy() {
   const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 30 })
   const videoScale = useTransform(smooth, [0, 0.5, 1], [0.96, 1, 1.02])
 
-  // Mouse parallax tracking for whole page (kept for future use)
-  void mouse
+  const project = getProject(slug)
+  if (!project) return <NotFoundPage />
+
+  // Prev / Next neighbours in the PROJECTS array (wraps around)
+  const idx = PROJECTS.findIndex(p => p.slug === slug)
+  const prev = PROJECTS[(idx - 1 + PROJECTS.length) % PROJECTS.length]
+  const next = PROJECTS[(idx + 1) % PROJECTS.length]
 
   return (
     <>
@@ -65,19 +67,47 @@ export function CaseStudy() {
             strokeLinecap="square"
           />
         </svg>
+        <svg className="cursor-hand" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path
+            d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5M14 10.5a1.5 1.5 0 0 1 3 0v1.5M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -5 -2.7c-.2-.3-1.4-2.4-3.3-5.7a1.5 1.5 0 0 1 .5-2 1.9 1.9 0 0 1 2.3.3l1.5 1.5"
+            stroke="var(--reactor)"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
         <div className="cursor-disc" />
       </div>
 
       <div className="grain-overlay" />
 
+      {/* React 19 hoists these into <head> — per-project title/description +
+          the social link-preview card (OG + Twitter) using this project's own
+          poster, so sharing a /work/<slug> link shows that project's cover.
+          Absolute URLs are required by scrapers. */}
+      <title>{`${project.caseStudyTitle} · Mahbod Tavassoli`}</title>
+      <meta name="description" content={project.description} />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content={`${project.caseStudyTitle} · Mahbod Tavassoli`} />
+      <meta property="og:description" content={project.description} />
+      <meta property="og:url" content={`https://artemis.studio/work/${project.slug}`} />
+      <meta property="og:image" content={`https://artemis.studio/work/${project.slug}/poster.jpg`} />
+      <meta property="og:image:width" content="1080" />
+      <meta property="og:image:height" content="1080" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={`${project.caseStudyTitle} · Mahbod Tavassoli`} />
+      <meta name="twitter:description" content={project.description} />
+      <meta name="twitter:image" content={`https://artemis.studio/work/${project.slug}/poster.jpg`} />
+      <link rel="canonical" href={`https://artemis.studio/work/${project.slug}`} />
+
       <Nav />
 
-      <article className={styles.page}>
+      <article id="main" className={styles.page}>
         {/* ── Hero ── */}
         <header className={styles.hero}>
-          <Link to="/" className={`t-label ${styles.backLink}`}>
+          <TransitionLink to="/work" className={`t-label ${styles.backLink}`}>
             ← Back to all work
-          </Link>
+          </TransitionLink>
 
           <span className={`t-label ${styles.eyebrow}`}>
             <span className={styles.eyebrowMark} aria-hidden />
@@ -110,8 +140,21 @@ export function CaseStudy() {
         <motion.div
           ref={videoRef}
           className={styles.videoWrap}
-          style={{ scale: videoScale }}
+          style={{
+            scale: videoScale,
+            // Pairs with the /work tile (and home TV hotspot) of the same
+            // slug — the clicked element morphs into this video block.
+            viewTransitionName: `work-${project.slug}`,
+          }}
         >
+          {/* Blurred fill behind the video — for portrait (9:16) clips it fills
+              the 16:9 stage on the sides instead of dead black bars. */}
+          <img
+            className={styles.videoBackdrop}
+            src={`/work/${project.slug}/poster.jpg`}
+            alt=""
+            aria-hidden
+          />
           <video
             className={styles.video}
             src={`/work/${project.slug}/video.mp4`}
@@ -150,13 +193,13 @@ export function CaseStudy() {
 
         {/* ── Prev / Next neighbour projects ── */}
         <nav className={styles.neighbours}>
-          <Link to={`/work/${prev.slug}`} className={styles.neighbourLink}>
+          <TransitionLink to={`/work/${prev.slug}`} className={styles.neighbourLink}>
             <span className={`t-mono ${styles.neighbourLabel}`}>← Previous</span>
             <span className={`t-display ${styles.neighbourTitle}`}>
               {prev.caseStudyTitle}
             </span>
-          </Link>
-          <Link
+          </TransitionLink>
+          <TransitionLink
             to={`/work/${next.slug}`}
             className={`${styles.neighbourLink} ${styles.neighbourRight}`}
           >
@@ -164,7 +207,7 @@ export function CaseStudy() {
             <span className={`t-display ${styles.neighbourTitle}`}>
               {next.caseStudyTitle}
             </span>
-          </Link>
+          </TransitionLink>
         </nav>
 
         {/* ── Closing CTA ── */}
@@ -186,20 +229,3 @@ export function CaseStudy() {
   )
 }
 
-/** 404-ish state — shown when /work/<unknown-slug> is hit */
-function NotFound({ slug }: { slug: string | undefined }) {
-  return (
-    <>
-      <Nav />
-      <main className={styles.notFound}>
-        <h1 className={`t-display ${styles.notFoundTitle}`}>Not found.</h1>
-        <p className={styles.notFoundDetail}>
-          No project at <code>/work/{slug ?? ''}</code>.
-        </p>
-        <Link to="/" className={`t-mono ${styles.backLink}`}>
-          ← Back home
-        </Link>
-      </main>
-    </>
-  )
-}

@@ -1,11 +1,11 @@
-import { useRef, useState, useMemo, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useRef, useState, useMemo, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Nav } from '../components/Nav'
+import { TransitionLink } from '../components/TransitionLink'
 import { Footer } from '../components/Footer'
 import { BackToTop } from '../components/BackToTop'
 import { SplitText } from '../components/SplitText'
-import { PROJECTS, type Project } from '../data/projects'
+import { VISIBLE_PROJECTS, type Project } from '../data/projects'
 import { useSmoothScroll } from '../hooks/useSmoothScroll'
 import { useMouseInteraction } from '../hooks/useMouseInteraction'
 import styles from './WorkIndex.module.css'
@@ -22,18 +22,18 @@ export function WorkIndex() {
   useSmoothScroll()
   const { cursorRef, state } = useMouseInteraction()
 
-  // Derive category list dynamically from PROJECTS data
+  // Derive category list dynamically from the visible projects
   const allCategories = useMemo(() => {
     const set = new Set<string>()
-    PROJECTS.forEach(p => set.add(p.category.split(' · ')[0]))
+    VISIBLE_PROJECTS.forEach(p => set.add(p.category.split(' · ')[0]))
     return ['All', ...Array.from(set)]
   }, [])
 
   const [filter, setFilter] = useState<string>('All')
 
   const visible = useMemo(() => {
-    if (filter === 'All') return PROJECTS
-    return PROJECTS.filter(p => p.category.startsWith(filter))
+    if (filter === 'All') return VISIBLE_PROJECTS
+    return VISIBLE_PROJECTS.filter(p => p.category.startsWith(filter))
   }, [filter])
 
   return (
@@ -55,18 +55,29 @@ export function WorkIndex() {
       </div>
       <div className="grain-overlay" />
 
+      {/* React 19 hoists these into <head> — per-route title/description + OG */}
+      <title>All Work · Mahbod Tavassoli</title>
+      <meta
+        name="description"
+        content="Full archive: video mapping, AI visual production, VFX, and live event visuals by Mahbod Tavassoli."
+      />
+      <meta property="og:title" content="All Work · Mahbod Tavassoli" />
+      <meta property="og:url" content="https://artemis.studio/work" />
+      <meta property="og:image" content="https://artemis.studio/og-cover.jpg" />
+      <link rel="canonical" href="https://artemis.studio/work" />
+
       <Nav />
 
-      <main className={styles.page}>
+      <main id="main" className={styles.page}>
         {/* ── Header ── */}
         <header className={styles.header}>
-          <Link to="/" className={`t-label ${styles.backLink}`}>
+          <TransitionLink to="/" className={`t-label ${styles.backLink}`}>
             ← Home
-          </Link>
+          </TransitionLink>
           <div className={styles.headerRow}>
             <span className="t-label">Archive</span>
             <span className={`t-label ${styles.count}`}>
-              {String(PROJECTS.length).padStart(2, '0')} projects
+              {String(VISIBLE_PROJECTS.length).padStart(2, '0')} projects
             </span>
           </div>
           <h1 className={`t-display ${styles.title}`}>
@@ -88,14 +99,11 @@ export function WorkIndex() {
               className={`${styles.filterBtn} ${filter === cat ? styles.filterBtnActive : ''}`}
             >
               {cat}
-              {cat !== 'All' && (
-                <span className={styles.filterCount}>
-                  {PROJECTS.filter(p => p.category.startsWith(cat)).length}
-                </span>
-              )}
-              {cat === 'All' && (
-                <span className={styles.filterCount}>{PROJECTS.length}</span>
-              )}
+              <span className={styles.filterCount}>
+                {cat === 'All'
+                  ? VISIBLE_PROJECTS.length
+                  : VISIBLE_PROJECTS.filter(p => p.category.startsWith(cat)).length}
+              </span>
             </button>
           ))}
         </nav>
@@ -131,6 +139,21 @@ export function WorkIndex() {
 function ProjectTile({ project, index }: { project: Project; index: number }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const tileRef = useRef<HTMLAnchorElement>(null)
+  const posterRef = useRef<HTMLImageElement>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+  // Flipped false when the poster 404s → the tile renders the deliberate
+  // "in production" slate instead of a broken image over a flat accent.
+  const [hasMedia, setHasMedia] = useState(true)
+  // Blur-up: a ~1 KB 24px thumb shows instantly; the sharp poster fades in
+  // over it once decoded, so tiles never pop from a flat color block.
+  const [posterLoaded, setPosterLoaded] = useState(false)
+
+  // Cached posters can finish before React attaches the onLoad listener —
+  // sample `complete` once after mount so those don't stay blurred forever.
+  useEffect(() => {
+    const img = posterRef.current
+    if (img && img.complete && img.naturalWidth > 0) setPosterLoaded(true)
+  }, [])
 
   // Lazy-prime the video when the tile scrolls near the viewport
   useEffect(() => {
@@ -150,15 +173,19 @@ function ProjectTile({ project, index }: { project: Project; index: number }) {
     return () => observer.disconnect()
   }, [])
 
-  function handleEnter() {
-    videoRef.current?.play().catch(() => {})
-  }
-  function handleLeave() {
+  const handleEnter = useCallback(() => {
+    const v = videoRef.current
+    if (!v) return
+    v.play().then(() => setIsPlaying(true)).catch(() => {})
+  }, [])
+
+  const handleLeave = useCallback(() => {
     const v = videoRef.current
     if (!v) return
     v.pause()
     v.currentTime = 0
-  }
+    setIsPlaying(false)
+  }, [])
 
   return (
     <motion.div
@@ -167,7 +194,7 @@ function ProjectTile({ project, index }: { project: Project; index: number }) {
       viewport={{ once: true, margin: '-10%' }}
       transition={{ duration: 0.6, delay: (index % 6) * 0.05, ease: [0.16, 1, 0.3, 1] }}
     >
-      <Link
+      <TransitionLink
         to={`/work/${project.slug}`}
         ref={tileRef}
         className={styles.tile}
@@ -175,19 +202,54 @@ function ProjectTile({ project, index }: { project: Project; index: number }) {
         onMouseLeave={handleLeave}
         aria-label={`Open ${project.caseStudyTitle}`}
       >
-        <div className={styles.visual} style={{ background: project.accent }}>
-          <video
-            ref={videoRef}
-            className={styles.tileVideo}
-            src={`/work/${project.slug}/preview.mp4`}
-            poster={`/work/${project.slug}/poster.jpg`}
-            muted
-            loop
-            playsInline
-            preload="none"
-          />
-          <span className={`t-mono ${styles.tileNumber}`}>{project.id}</span>
-          <span className={`t-mono ${styles.tileYear}`}>{project.year}</span>
+        <div
+          className={styles.visual}
+          style={{
+            // Morph target: pairs with the case-study video wrap that
+            // carries the same view-transition-name.
+            viewTransitionName: `work-${project.slug}`,
+            ...(hasMedia ? { background: project.accent } : null),
+          }}
+        >
+          {hasMedia ? (
+            <>
+              <video
+                ref={videoRef}
+                className={styles.tileVideo}
+                src={`/work/${project.slug}/preview.mp4`}
+                muted
+                loop
+                playsInline
+                preload="none"
+              />
+              <img
+                className={`${styles.tileBlur} ${posterLoaded ? styles.tileBlurHidden : ''}`}
+                src={`/work/${project.slug}/blur.jpg`}
+                alt=""
+                aria-hidden
+              />
+              <img
+                ref={posterRef}
+                className={`${styles.tilePoster} ${posterLoaded ? '' : styles.tilePosterLoading} ${isPlaying ? styles.tilePosterHidden : ''}`}
+                src={`/work/${project.slug}/poster.jpg`}
+                alt=""
+                loading="lazy"
+                onLoad={() => setPosterLoaded(true)}
+                onError={() => setHasMedia(false)}
+              />
+              <span className={`t-mono ${styles.tileYear}`}>{project.year}</span>
+            </>
+          ) : (
+            <span className={styles.tilePending}>
+              <span className={`t-display ${styles.tilePendingId}`} aria-hidden>
+                {project.id}
+              </span>
+              <span className={`t-mono ${styles.tilePendingTag}`}>In production</span>
+              <span className={`t-mono ${styles.tilePendingHint}`}>
+                Film coming soon · {project.year}
+              </span>
+            </span>
+          )}
         </div>
         <div className={styles.meta}>
           <span className={`t-mono ${styles.metaCategory}`}>{project.category}</span>
@@ -197,7 +259,7 @@ function ProjectTile({ project, index }: { project: Project; index: number }) {
           <p className={styles.tileDesc}>{project.description}</p>
           <span className={`t-mono ${styles.tileClient}`}>{project.client}</span>
         </div>
-      </Link>
+      </TransitionLink>
     </motion.div>
   )
 }

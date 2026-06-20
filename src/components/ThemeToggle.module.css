@@ -10,7 +10,7 @@
   justify-content: center;
   background: transparent;
   border: 0.5px solid var(--border-strong);
-  border-radius: 999px;
+  border-radius: 0;
   color: var(--linen);
   cursor: none;
   padding: 0;

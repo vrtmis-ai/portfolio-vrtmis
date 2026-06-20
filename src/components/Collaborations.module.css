@@ -1,131 +1,76 @@
-﻿/* ═══════════════════════════════════════════════
-   COLLABORATIONS — Editorial grid of client names.
+/* ═══════════════════════════════════════════════
+   TRUSTED BY — full-bleed editorial marquee of client names.
+   No boxes, no logos. Names scroll; hover pauses + highlights.
    ═══════════════════════════════════════════════ */
 
 .section {
   padding-top: 120px;
   padding-bottom: 120px;
   border-top: 1px solid var(--border-faint);
-  /* Skip painting the 15-tile grid when off-screen */
+  /* Skip painting the off-screen marquee */
   content-visibility: auto;
-  contain-intrinsic-size: 800px;
+  contain-intrinsic-size: 360px;
 }
 
 .header {
-  margin-bottom: 64px;
+  margin-bottom: 56px;
 }
 
-.headerRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-
-.count {
-  color: var(--iron);
-}
-
-/* Grid of brand names */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 0;
-  border-top: 1px solid var(--border-soft);
-  border-left: 1px solid var(--border-soft);
-}
-
-.brand {
-  --tilt-x: 0deg;
-  --tilt-y: 0deg;
-  --mx: 50%;
-  --my: 50%;
-  border-right: 1px solid var(--border-soft);
-  border-bottom: 1px solid var(--border-soft);
-  padding: 32px 24px;
-  position: relative;
+/* The moving strip breaks out of the global section gutter so it runs
+   edge-to-edge; the inner track is what actually animates. */
+.marquee {
+  margin-inline: calc(-1 * clamp(24px, 5vw, 80px));
   overflow: hidden;
-  cursor: none;
-  /* 3D mouse-react tilt — subtle (±3deg) since tiles are small */
-  transform: perspective(800px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
-  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1),
-              background 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-  isolation: isolate;
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+  padding: 40px 0;
+  /* Soft fade at both edges so names don't hard-cut at the viewport */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
 }
 
-/* Cursor-tracking spotlight — reactor glow that follows the mouse */
-.brand::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    160px circle at var(--mx) var(--my),
-    oklch(64% 0.225 36 / 0.22),
-    transparent 60%
-  );
-  opacity: 0;
-  transition: opacity 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-  pointer-events: none;
-  z-index: 1;
+.track {
+  display: flex;
+  width: max-content;
+  animation: trustScroll 45s linear infinite;
 }
 
-.brand:hover::before {
-  opacity: 1;
+/* Pause the whole strip on hover so a name can be read / highlighted */
+.marquee:hover .track {
+  animation-play-state: paused;
 }
 
-/* Inner top highlight — glass-edge catching light, only on hover */
-.brand::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  box-shadow: inset 0 1px 0 transparent;
-  transition: box-shadow 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-  z-index: 2;
+@keyframes trustScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
-.brand:hover::after {
-  box-shadow: inset 0 1px 0 var(--border-strong);
+.row {
+  display: flex;
+  align-items: center;
+  flex: none;
+  width: max-content;
 }
 
-.brand:hover {
-  /* Lifted surface — flips with theme via --lead token */
-  background: var(--lead);
-}
-
-.brand:hover .brandName {
-  color: var(--reactor);
-}
-
-.brandName {
-  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
-  color: var(--paper);
-  letter-spacing: -0.01em;
-  text-transform: none;
+.name {
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
   font-weight: 600;
-  transition: color 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-  display: block;
-  position: relative;
-  z-index: 3; /* above the spotlight gradient */
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  white-space: nowrap;
+  transition: color 0.35s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* "+ many more" tile — quieter, reactor-tinted */
-.brandMore {
-  background: var(--char);
-}
-
-.brandMore .brandName {
+.name:hover {
   color: var(--reactor);
-  font-style: italic;
-  font-weight: 500;
 }
 
-.brandMore:hover {
-  background: var(--pitch);
-}
-
-.brandMore:hover .brandName {
-  color: var(--linen);
-  font-style: normal;
+.dot {
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  color: var(--reactor);
+  margin: 0 30px;
+  opacity: 0.45;
+  user-select: none;
 }
 
 /* ── Responsive ── */
@@ -135,11 +80,11 @@
     padding-bottom: 80px;
   }
 
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
+  .marquee {
+    padding: 28px 0;
   }
 
-  .brand {
-    padding: 24px 16px;
+  .dot {
+    margin: 0 20px;
   }
 }

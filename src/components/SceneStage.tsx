@@ -94,16 +94,16 @@ export function SceneStage({
         className={styles.backdrop}
         style={{ y: backdropY }}
       >
-        {type === 'image' && src && (
+        {type === 'image' && src ? (
           <img
             src={src}
             alt={heading ?? ''}
             className={styles.media}
             loading="lazy"
           />
-        )}
+        ) : null}
 
-        {type === 'video' && src && (
+        {type === 'video' && src ? (
           <video
             className={styles.media}
             src={src}
@@ -114,9 +114,9 @@ export function SceneStage({
             playsInline
             preload="metadata"
           />
-        )}
+        ) : null}
 
-        {type === 'model3d' && src && (
+        {type === 'model3d' && src ? (
           <div className={styles.modelWrap}>
             <Canvas
               dpr={[1, 2]}
@@ -132,11 +132,11 @@ export function SceneStage({
               </Suspense>
             </Canvas>
           </div>
-        )}
+        ) : null}
 
-        {type === 'placeholder' && (
+        {type === 'placeholder' ? (
           <SceneePlaceholder />
-        )}
+        ) : null}
       </motion.div>
 
       {/* ── Dark wash for legibility ── */}
@@ -147,20 +147,20 @@ export function SceneStage({
         className={`${styles.textLayer} ${textPlacement === 'corner' ? styles.textCorner : ''}`}
         style={{ y: textY, opacity: effectiveOpacity }}
       >
-        {label && (
+        {label ? (
           <div className={styles.labelRow}>
             <span className="t-label">{label}</span>
           </div>
-        )}
-        {heading && (
+        ) : null}
+        {heading ? (
           <h2 className={`t-display ${styles.heading}`}>{heading}</h2>
-        )}
-        {subheading && (
+        ) : null}
+        {subheading ? (
           <p className={`t-body ${styles.subheading}`}>{subheading}</p>
-        )}
-        {caption && (
+        ) : null}
+        {caption ? (
           <span className={`t-mono ${styles.caption}`}>{caption}</span>
-        )}
+        ) : null}
       </motion.div>
     </div>
   )

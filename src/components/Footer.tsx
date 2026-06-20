@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { TransitionLink } from './TransitionLink'
 import styles from './Footer.module.css'
 
 /**
@@ -67,10 +68,10 @@ export function Footer() {
       <div className={styles.row2}>
         <FooterColumn title="Navigate">
           <a href="#top" data-hover>Top</a>
-          <a href="#work">Work</a>
+          <TransitionLink to="/work">Work</TransitionLink>
           <a href="#about">About</a>
           <a href="#collaborations" data-hover>Clients</a>
-          <a href="#contact">Contact</a>
+          <TransitionLink to="/contact">Contact</TransitionLink>
         </FooterColumn>
 
         <FooterColumn title="Contact">
@@ -84,10 +85,9 @@ export function Footer() {
         </FooterColumn>
 
         <FooterColumn title="Elsewhere">
-          <a href="#" data-hover>Instagram ↗</a>
-          <a href="#" data-hover>Vimeo ↗</a>
-          <a href="#" data-hover>Behance ↗</a>
-          <a href="#" data-hover>LinkedIn ↗</a>
+          <a href="https://instagram.com/thvrtmis" target="_blank" rel="noreferrer" data-hover>Instagram ↗</a>
+          <a href="https://t.me/vrtmis" target="_blank" rel="noreferrer" data-hover>Telegram ↗</a>
+          <a href="https://linkedin.com/in/mahbod-tavassoli-thvrtmis" target="_blank" rel="noreferrer" data-hover>LinkedIn ↗</a>
         </FooterColumn>
 
         <FooterColumn title="Studio">

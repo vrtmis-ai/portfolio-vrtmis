@@ -63,6 +63,11 @@ html {
   --wash-soft:     oklch(8% 0.012 30 / 0.25);
   --wash-strong:   oklch(8% 0.012 30 / 0.55);
 
+  /* ── On-media text — for type sitting ON photos/video. The imagery is
+     dark in BOTH themes, so these do NOT flip with [data-theme]. ── */
+  --on-media:     oklch(94% 0.008 30);
+  --on-media-dim: oklch(94% 0.008 30 / 0.66);
+
   color-scheme: dark;
 }
 
@@ -193,6 +198,28 @@ button:focus-visible {
   outline-offset: 4px;
 }
 
+/* ── Skip link — first focusable element, visually hidden until focused ── */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: clamp(24px, 5vw, 48px);
+  z-index: 300;
+  padding: 10px 16px;
+  background: var(--reactor);
+  color: oklch(8% 0.012 30);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: top 0.2s var(--ease-out-expo);
+}
+
+.skip-link:focus-visible {
+  top: 12px;
+  outline-offset: 2px;
+}
+
 /* ── Grain overlay ── */
 .grain-overlay {
   position: fixed;
@@ -316,19 +343,38 @@ section {
   pointer-events: none;
 }
 
+/* ── Pointing hand (hover state) ───────────────────────────── */
+/* Same orange-hairline language as the arrow. Hidden until hover, then it
+   replaces the arrow over anything interactive (links, buttons, the TV
+   hotspots, the draggable notebook) — so the affordance reads as a hand
+   without ever stacking a native OS cursor on top. */
+.cursor-hand {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  opacity: 0;
+  pointer-events: none;
+  /* Shift so the index fingertip sits on the mouse hot-point (0,0) */
+  transform: translate(-8px, -3px);
+  filter: drop-shadow(0 1px 2px oklch(8% 0.012 30 / 0.4));
+  transition: opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
 /* ── State switching ───────────────────────────────────────── */
-/* Hover state INTENTIONALLY DISABLED — the arrow stays the cursor across
-   every link, button, and nav item. The .cursor-disc element is kept so
-   the JSX in App / CaseStudy doesn't need to change, but it never appears. */
+/* Idle = arrow, hover = hand. The legacy disc stays hidden in every state. */
 .cursor.state-hover .cursor-arrow-glass,
 .cursor.state-hover .cursor-arrow-outline {
-  /* keep showing the arrow on hover too */
+  opacity: 0;
+}
+
+.cursor.state-hover .cursor-hand {
   opacity: 1;
 }
 
-/* Disc was the previous hover treatment — disabled. Arrow stays in all states. */
-.cursor.state-hover .cursor-disc {
-  opacity: 0;
+.cursor-disc {
+  display: none;
 }
 
 /* ── Responsive ── */
@@ -336,6 +382,27 @@ section {
   body { cursor: auto; }
   button, a { cursor: pointer; }
   .cursor { display: none; }
+}
+
+/* ── View transitions — route changes crossfade; elements that share a
+   view-transition-name (work tile ↔ case-study video) morph between pages.
+   Browsers without the API simply navigate instantly (TransitionLink guards). ── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+  animation-timing-function: var(--ease-out-quart);
+}
+
+/* The shared-element morph gets the site's signature spring */
+::view-transition-group(*) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Fixed chrome shouldn't crossfade with the page — give each piece its own
+   group so it stays pinned while the content transitions underneath. */
+.cursor {
+  view-transition-name: mt-cursor;
 }
 
 /* ── Honor reduced motion ── */
@@ -348,5 +415,11 @@ section {
   }
   .grain-overlay {
     animation: none;
+  }
+  ::view-transition-group(*),
+  ::view-transition-image-pair(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

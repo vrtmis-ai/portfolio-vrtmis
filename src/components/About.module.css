@@ -26,6 +26,62 @@
 }
 
 /* ════════════════════════════════════════════════
+   LAYOUT — written profile (left) + 3D notebook stage (right).
+   The notebook column is sticky so it stays in view while the
+   profile scrolls past it.
+   ════════════════════════════════════════════════ */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.85fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+
+.left {
+  min-width: 0;
+}
+
+.right {
+  position: sticky;
+  top: 96px;
+  height: min(82vh, 820px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* The notebook can swing past the column edges without being clipped. */
+  overflow: visible;
+}
+
+/* The "ceiling" — a divider line matching the section rules, from which the
+   chain hangs. Aligns with the left column's first divider so it reads as the
+   line between sections. */
+.right::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: var(--border-soft);
+  margin-bottom: -1px;
+}
+
+.grabHint {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--reactor);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* Inside the left column the narrative is no longer page-centred. */
+.left .narrative {
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* ════════════════════════════════════════════════
    1 / DOSSIER — passport-style 2-column grid.
    Label stacked above value in each cell. Pairs sit side-by-side
    so the eye doesn't have to travel across a wide row.
@@ -206,6 +262,25 @@
 }
 
 /* ── Responsive ── */
+@media (max-width: 1024px) {
+  /* Stack: notebook on top, profile below. Sticky is dropped so it scrolls.
+     minmax(0, 1fr) — NOT bare `1fr` (= minmax(auto,1fr)). The auto minimum
+     would size the single column to the column's content min-width (the 3D
+     notebook canvas / timeline ≈ 808px), overflowing the phone viewport and
+     creating page-wide horizontal scroll. min 0 lets it shrink to fit. */
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+  }
+
+  .right {
+    position: static;
+    height: 56vh;
+    min-height: 360px;
+    order: -1;
+  }
+}
+
 @media (max-width: 768px) {
   .about {
     padding-top: 80px;

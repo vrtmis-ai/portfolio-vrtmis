@@ -1,7 +1,15 @@
 import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { Suspense, lazy, useRef } from 'react'
 import { SplitText } from './SplitText'
 import styles from './About.module.css'
+
+// The notebook pulls in the whole three.js/R3F stack (~600 KB min). Loading
+// it lazily — and only once About scrolls near the viewport — keeps all of
+// that out of the home page's initial bundle. The entrance drop plays when
+// the canvas mounts, which is exactly this moment, so nothing visual changes.
+const NotebookStage = lazy(() =>
+  import('./HangingNotebook').then(m => ({ default: m.NotebookStage })),
+)
 
 /**
  * About — three layers, in order:
@@ -73,6 +81,11 @@ export function About() {
         </motion.h2>
       </div>
 
+      {/* Two columns: written profile on the LEFT, the draggable 3D notebook
+          (hanging from a fixed chain) on the RIGHT. The notebook column is
+          sticky so it stays in view while the profile scrolls. */}
+      <div className={styles.layout}>
+        <div className={styles.left}>
       {/* ── 1. DOSSIER — passport-style 2-column grid, compact ── */}
       <motion.div
         className={styles.dossier}
@@ -143,7 +156,7 @@ export function About() {
           viewport={{ once: true, margin: '-15%' }}
           transition={{ duration: 0.8, delay: 0.1 }}
         >
-          The work moves between rooms. A render farm at three in the morning. A stage at nine at night. A meeting at noon in a language that isn't mine. The constant is the wall — there's always a wall somewhere that's about to light up.
+          The work moves between rooms. A render farm at three in the morning. A stage at nine at night. A meeting at noon in a language that isn't mine. The constant is the wall: there's always a wall somewhere that's about to light up.
         </motion.p>
       </div>
 
@@ -176,6 +189,20 @@ export function About() {
             </motion.li>
           ))}
         </ol>
+      </div>
+        </div>
+
+        {/* RIGHT — the 3D notebook hanging from its chain. Grab to swing.
+            Mounted only when About is near view, so the three.js chunk is
+            never fetched by visitors who don't scroll this far. */}
+        <aside className={styles.right}>
+          {isInView ? (
+            <Suspense fallback={null}>
+              <NotebookStage />
+            </Suspense>
+          ) : null}
+          <span className={`t-mono ${styles.grabHint}`}>drag to swing ↗</span>
+        </aside>
       </div>
     </section>
   )

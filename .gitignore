@@ -6,3 +6,23 @@ dist/
 
 # Test artifacts
 tests/screenshots/
+
+# ── Heavy source/working media — never deploy these (keep them local) ──
+source-media/
+blender/
+*.zip
+*.blend
+*.blend1
+
+# Rejected promo-teaser experiment
+teaser.mp4
+teaser-frames/
+record-teaser.mjs
+
+# Temp frame-extraction scratch
+.tmp-frames/
+
+# Local dev tooling / agent config
+.agents/
+.claude/
+skills-lock.json

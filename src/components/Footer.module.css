@@ -20,7 +20,12 @@
 }
 
 .wordmark {
-  font-size: clamp(3.5rem, 11vw, 11rem);
+  /* 8.5vw — NOT 11vw. At 11vw the longest unbreakable token ("TEHRAN.") set a
+     min-content (~7.25× the font px) wider than the 1.4fr column could grant in
+     the row1 grid, shoving the 1fr clock column off the right edge and causing
+     page-wide horizontal scroll everywhere from ~769px up to ~1650px. 8.5vw
+     keeps the headline large but lets the clock share the row at every width. */
+  font-size: clamp(3.5rem, 8.5vw, 9rem);
   color: var(--linen);
   line-height: 0.88;
   letter-spacing: -0.045em;
@@ -110,6 +115,11 @@
   position: relative;
   display: inline-block;
   width: fit-content;
+  /* The email is one long unbreakable token; on a ~320px phone its min-content
+     (~190px) plus the sibling column + gap overflows the 2-up grid. `anywhere`
+     lets it wrap so the column min-content collapses. No effect on wide layouts
+     where the email fits on one line. */
+  overflow-wrap: anywhere;
   transition: color 0.3s var(--ease-out-expo),
               padding-left 0.4s var(--ease-out-expo);
 }
@@ -190,10 +200,22 @@
     padding: 80px 20px 32px;
   }
 
+  /* minmax(0, …) — NOT bare 1fr (= minmax(auto,1fr)). The auto minimum sizes the
+     column to its content min-width; the wordmark's largest unbreakable token
+     ("TEHRAN.") at the desktop clamp floor (3.5rem ≈ 56px) is ~406px wide, which
+     would push the column — and the whole document — past a 375px phone and
+     create page-wide horizontal scroll. min 0 lets the column shrink to fit. */
   .row1 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 32px;
     padding-bottom: 64px;
+  }
+
+  /* The desktop clamp floor (3.5rem) doesn't scale below 56px, so on phones
+     "TEHRAN." touched both frame edges and overflowed. Re-clamp to viewport
+     width so the widest line stays inside the ~335px content box. */
+  .wordmark {
+    font-size: clamp(2rem, 12vw, 3.25rem);
   }
 
   .clock {
