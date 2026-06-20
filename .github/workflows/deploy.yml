@@ -29,11 +29,16 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run build
+      # Prerender drives the built app with headless Chrome to bake real
+      # HTML + per-page OG/meta for each route. ubuntu-latest ships Google
+      # Chrome; point the script's puppeteer-core at it via CHROME_PATH.
+      - run: echo "CHROME_PATH=$(which google-chrome)" >> "$GITHUB_ENV"
 
-      # SPA fallback: GitHub Pages serves 404.html for unknown paths, so a
-      # client-side route loaded/refreshed directly (/work, /work/:slug,
-      # /contact) resolves instead of 404ing.
+      - run: npm run build:static
+
+      # SPA fallback: GitHub Pages serves 404.html for any path without a
+      # prerendered index.html, so unknown/refreshed client routes still boot
+      # the app instead of a hard 404.
       - run: cp dist/index.html dist/404.html
 
       - uses: actions/configure-pages@v5
