@@ -63,6 +63,7 @@ export const PROJECTS: Project[] = [
     slug: 'alireza-ghorbani',
     featured: true,
     id: '01',
+    hidden: true, // removed from the site on request — data kept to re-enable later
     title: 'Alireza\nGhorbani',
     caseStudyTitle: 'Alireza Ghorbani · Concert Tour',
     client: 'Concert Tour',
