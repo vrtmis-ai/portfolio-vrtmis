@@ -176,10 +176,14 @@
     padding-top: 80px;
     padding-bottom: 80px;
   }
+  /* Two-up on phones so the discipline cards don't become a long single column. */
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
   .cardInner {
-    padding: 32px 24px;
+    padding: 22px 16px;
+  }
+  .cardName {
+    font-size: 16px;
   }
 }
