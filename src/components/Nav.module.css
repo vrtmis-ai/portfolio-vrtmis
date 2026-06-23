@@ -47,9 +47,10 @@
 }
 
 .logoMark {
-  height: 22px;
+  height: 26px;
   width: auto;
-  /* Tint to linen — the source PNG is orange */
+  /* The mark ships white-on-transparent; this keeps it crisp white on the dark
+     nav and (via the light-theme override below) flips it to ink on linen. */
   filter: brightness(0) invert(1) opacity(0.9);
   transition: filter 0.25s var(--ease-out-expo);
 }
