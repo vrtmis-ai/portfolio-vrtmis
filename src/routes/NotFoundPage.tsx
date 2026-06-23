@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Nav } from '../components/Nav'
 import { useMouseInteraction } from '../hooks/useMouseInteraction'
@@ -16,12 +16,14 @@ import styles from './NotFoundPage.module.css'
 export function NotFoundPage() {
   const { cursorRef, state } = useMouseInteraction()
   const location = useLocation()
-  // Read the motion preference once (no effect, no cascading render).
-  const [reduceMotion] = useState(
-    () =>
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-  )
+  // The dead-channel static IS the 404, so always play it. The autoplay
+  // attribute alone is ignored by some mobile browsers, so nudge it on mount.
+  // (If the OS hard-blocks autoplay — e.g. iOS Low Power Mode — the single
+  // noise-frame poster shows instead, which still reads as a dead channel.)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  useEffect(() => {
+    videoRef.current?.play().catch(() => {})
+  }, [])
 
   return (
     <>
@@ -49,10 +51,11 @@ export function NotFoundPage() {
 
       <main id="main" className={styles.page}>
         <video
+          ref={videoRef}
           className={styles.static}
           src="/room/signal-lost.mp4"
           poster="/room/signal-lost-poster.jpg"
-          autoPlay={!reduceMotion}
+          autoPlay
           loop
           muted
           playsInline
