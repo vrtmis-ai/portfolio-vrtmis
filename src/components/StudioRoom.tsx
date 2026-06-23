@@ -118,6 +118,9 @@ export function StudioRoom() {
   const revDur = useRef(0)
   // Single alpha overlay that lights up the hovered CRT (src swapped per TV).
   const tvVidRef = useRef<HTMLVideoElement>(null)
+  // The looping TV-wall clip — deferred (preload="none") and warmed in the
+  // background once the hero is up, so it doesn't fight the first scene's load.
+  const scene2Ref = useRef<HTMLVideoElement>(null)
 
   // Hovered project drives the info card (enter/leave only — rare). The card's
   // POSITION follows the cursor through a ref + rAF DOM write (NOT state), so
@@ -277,6 +280,19 @@ export function StudioRoom() {
     if (intro) intro.style.opacity = '0'
     heroReadyRef.current = true
     setHeroReady(true)
+    // Hero is shown — NOW warm the turn + wall clips in the background, so they
+    // are ready when the viewer scrolls without competing with the hero's first
+    // paint on a slow connection. (Both ship preload="none".)
+    const warm = (v: HTMLVideoElement | null, play = false) => {
+      if (!v) return
+      if (v.preload !== 'auto') {
+        v.preload = 'auto'
+        v.load()
+      }
+      if (play) void v.play().catch(() => {})
+    }
+    warm(transRef.current)
+    warm(scene2Ref.current, true)
   }, [])
 
   // Scroll progress across the whole tall container.
@@ -421,7 +437,7 @@ export function StudioRoom() {
             poster="/room/scene-2.jpg"
             muted
             playsInline
-            preload="auto"
+            preload="none"
             aria-hidden
             onEnded={finishTurn}
             onLoadedMetadata={() => {
@@ -458,13 +474,13 @@ export function StudioRoom() {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
             <video
+              ref={scene2Ref}
               className={styles.sceneImg}
               poster="/room/scene-2.jpg"
-              autoPlay
               loop
               muted
               playsInline
-              preload="auto"
+              preload="none"
               aria-label="Wall of televisions, each one a project"
             >
               <source src="/room/scene-2.mp4" type="video/mp4" />
