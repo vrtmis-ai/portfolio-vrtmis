@@ -197,16 +197,7 @@ export function About() {
             never fetched by visitors who don't scroll this far. */}
         <aside className={styles.right}>
           {isInView ? (
-            <Suspense
-              fallback={
-                <img
-                  src="/about-me-cover.png"
-                  alt=""
-                  aria-hidden
-                  className={styles.notebookPoster}
-                />
-              }
-            >
+            <Suspense fallback={null}>
               <NotebookStage />
             </Suspense>
           ) : null}

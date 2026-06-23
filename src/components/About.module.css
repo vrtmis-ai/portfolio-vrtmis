@@ -63,17 +63,6 @@
   margin-bottom: -1px;
 }
 
-/* Soft poster shown in the notebook's place while the heavy 3D chunk + glb
-   load, so the column never sits blank on a slow connection. */
-.notebookPoster {
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  object-fit: contain;
-  opacity: 0.3;
-  filter: blur(2px);
-}
-
 .grabHint {
   margin-top: 12px;
   text-align: center;

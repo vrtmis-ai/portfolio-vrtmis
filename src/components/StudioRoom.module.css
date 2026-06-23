@@ -8,6 +8,10 @@
 .section {
   position: relative;
   background: var(--pitch);
+  /* Full-bleed: cancel the global <section> side gutter so the camera-turn
+     scenes fill the screen edge-to-edge (no black margins on the sides). */
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* Scroll range gives the pin something to travel through. The first nudge down
@@ -314,7 +318,9 @@
 .archiveRow {
   display: flex;
   justify-content: flex-end;
-  padding: 24px 0 8px;
+  /* Re-add the gutter the full-bleed section dropped, so the link + divider
+     keep their inset instead of touching the screen edge. */
+  padding: 24px clamp(24px, 5vw, 80px) 8px;
   border-bottom: 1px solid var(--border-faint);
 }
 
