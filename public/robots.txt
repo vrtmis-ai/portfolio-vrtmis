@@ -1,5 +1,5 @@
-# https://artemis.studio
+# https://vrtmis.ir
 User-agent: *
 Allow: /
 
-Sitemap: https://artemis.studio/sitemap.xml
+Sitemap: https://vrtmis.ir/sitemap.xml

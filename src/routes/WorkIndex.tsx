@@ -62,9 +62,9 @@ export function WorkIndex() {
         content="Full archive: video mapping, AI visual production, VFX, and live event visuals by Mahbod Tavassoli."
       />
       <meta property="og:title" content="All Work · Mahbod Tavassoli" />
-      <meta property="og:url" content="https://artemis.studio/work" />
-      <meta property="og:image" content="https://artemis.studio/og-cover.jpg" />
-      <link rel="canonical" href="https://artemis.studio/work" />
+      <meta property="og:url" content="https://vrtmis.ir/work" />
+      <meta property="og:image" content="https://vrtmis.ir/og-cover.jpg" />
+      <link rel="canonical" href="https://vrtmis.ir/work" />
 
       <Nav />
 

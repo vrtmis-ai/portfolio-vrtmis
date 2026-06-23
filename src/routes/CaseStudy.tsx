@@ -90,15 +90,15 @@ export function CaseStudy() {
       <meta property="og:type" content="article" />
       <meta property="og:title" content={`${project.caseStudyTitle} · Mahbod Tavassoli`} />
       <meta property="og:description" content={project.description} />
-      <meta property="og:url" content={`https://artemis.studio/work/${project.slug}`} />
-      <meta property="og:image" content={`https://artemis.studio/work/${project.slug}/poster.jpg`} />
+      <meta property="og:url" content={`https://vrtmis.ir/work/${project.slug}`} />
+      <meta property="og:image" content={`https://vrtmis.ir/work/${project.slug}/poster.jpg`} />
       <meta property="og:image:width" content="1080" />
       <meta property="og:image:height" content="1080" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={`${project.caseStudyTitle} · Mahbod Tavassoli`} />
       <meta name="twitter:description" content={project.description} />
-      <meta name="twitter:image" content={`https://artemis.studio/work/${project.slug}/poster.jpg`} />
-      <link rel="canonical" href={`https://artemis.studio/work/${project.slug}`} />
+      <meta name="twitter:image" content={`https://vrtmis.ir/work/${project.slug}/poster.jpg`} />
+      <link rel="canonical" href={`https://vrtmis.ir/work/${project.slug}`} />
 
       <Nav />
 

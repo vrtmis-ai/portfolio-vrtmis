@@ -75,15 +75,15 @@ function App() {
         name="description"
         content="Tehran-based visual artist working in VFX, video mapping, AI visual production, motion graphics, and live show visuals. Ten years of building images that didn't exist before."
       />
-      <link rel="canonical" href="https://artemis.studio/" />
+      <link rel="canonical" href="https://vrtmis.ir/" />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content="https://artemis.studio/" />
+      <meta property="og:url" content="https://vrtmis.ir/" />
       <meta property="og:title" content="Mahbod Tavassoli — Visual Artist & AI Creative" />
       <meta
         property="og:description"
         content="Tehran-based visual artist. VFX, video mapping, AI visual production, motion, live show visuals. Ten years of building images that didn't exist before."
       />
-      <meta property="og:image" content="https://artemis.studio/og-cover.jpg" />
+      <meta property="og:image" content="https://vrtmis.ir/og-cover.jpg" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:locale" content="en_US" />
@@ -94,7 +94,7 @@ function App() {
         name="twitter:description"
         content="Tehran-based visual artist. VFX, video mapping, AI production, live show visuals. Ten years of building images that didn't exist before."
       />
-      <meta name="twitter:image" content="https://artemis.studio/og-cover.jpg" />
+      <meta name="twitter:image" content="https://vrtmis.ir/og-cover.jpg" />
 
       {/* First-paint cinematic veil (session-gated) */}
       <IntroLoader />

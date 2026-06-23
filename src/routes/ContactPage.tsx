@@ -24,9 +24,9 @@ export function ContactPage() {
         content="Get in touch with Mahbod Tavassoli — VFX, video mapping, and AI visual production for live shows, film, and brands."
       />
       <meta property="og:title" content="Contact · Mahbod Tavassoli" />
-      <meta property="og:url" content="https://artemis.studio/contact" />
-      <meta property="og:image" content="https://artemis.studio/og-cover.jpg" />
-      <link rel="canonical" href="https://artemis.studio/contact" />
+      <meta property="og:url" content="https://vrtmis.ir/contact" />
+      <meta property="og:image" content="https://vrtmis.ir/og-cover.jpg" />
+      <link rel="canonical" href="https://vrtmis.ir/contact" />
 
       <div ref={cursorRef} className={`cursor state-${state}`} aria-hidden>
         <div className="cursor-arrow-glass" />
